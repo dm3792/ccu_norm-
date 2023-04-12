@@ -176,7 +176,7 @@ if __name__ == '__main__':
     tokenizer = AutoTokenizer.from_pretrained(args.encoder)
     # # TODO: support configurable weight decay, higher LR for classification head
     # # TODO: support learning rate scheduler (linear?)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_Decay)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
     if(args.lrscheduler):
         scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
 
