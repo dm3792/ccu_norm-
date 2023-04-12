@@ -32,14 +32,11 @@ def generate_input(split,utt_before,utt_after):
     for item in content:
         
         
-        print(content[item]['split'])
-        print(item)
-
         if(content[item]['split']!=split):
             continue
 
         try:
-            norms = pd.read_csv('/yi/'+item+'.tab', sep='\t', lineterminator='\n')
+            norms = pd.read_csv('yi/'+item+'.tab', sep='\t', lineterminator='\n')
             print('success')
         except:
             continue
