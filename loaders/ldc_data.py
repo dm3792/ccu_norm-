@@ -32,8 +32,8 @@ DATA_TYPES = {
     '.mp4.ldcc': 'video'
 }
 
-VAL_FILE_IDS = 'val.json'
-TEST_FILE_IDS = 'test.json'
+VAL_FILE_IDS = 'loaders/val.json'
+TEST_FILE_IDS = 'loaders/test.json'
 
 
 def add_processed_frames(file_ext, update_key, processed_files, utterances):
