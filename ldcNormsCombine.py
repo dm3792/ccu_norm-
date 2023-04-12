@@ -5,6 +5,7 @@ from loaders import ldc_data
 def generate_input(split,utt_before,utt_after):
     # with open('amith-cache.pkl', 'rb') as pickle_file:
     #     content = pickle.load(pickle_file)
+    print(split)
     content = ldc_data.load_ldc_data()
     result =[]
     norm_val = {
@@ -38,6 +39,7 @@ def generate_input(split,utt_before,utt_after):
 
         try:
             norms = pd.read_csv('/yi/'+item+'.tab', sep='\t', lineterminator='\n')
+            print('success')
         except:
             continue
         
@@ -121,7 +123,7 @@ def generate_input(split,utt_before,utt_after):
                     }
                     
                     result.append(example)
-  
+    print(len(result))
     return result               
         
                 
