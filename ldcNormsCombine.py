@@ -50,8 +50,8 @@ def generate_input(split,utt_before,utt_after):
             cpu.append((float(chp['timestamp']),'c'))
         
         for ut in content[item]['utterances']:
-            print(ut)
-            cpu.append((float(ut['start']),'u',float(ut['end']),ut['text']))
+            utk=ut['whisper']
+            cpu.append((float(utk['start']),'u',float(utk['end']),utk['text']))
             
         
         cpu.sort(key=lambda x: x[0])
