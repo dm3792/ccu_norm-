@@ -31,7 +31,8 @@ def generate_input(split,utt_before,utt_after):
     }
     for item in content:
         
-        
+        print(item)
+        print(content[item])
         if(content[item]['split']!=split):
             continue
 
