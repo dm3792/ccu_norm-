@@ -49,9 +49,8 @@ def generate_input(split,utt_before,utt_after):
         for chp in content[item]['changepoints']:
             cpu.append((float(chp['timestamp']),'c'))
         
-        for ut in content[item]['utterances']:
-            utk=ut['whisper']
-            cpu.append((float(utk['start']),'u',float(utk['end']),utk['text']))
+        for ut in content[item]['utterances']['whisper']:
+            cpu.append((float(ut['start']),'u',float(ut['end']),ut['text']))
             
         
         cpu.sort(key=lambda x: x[0])
