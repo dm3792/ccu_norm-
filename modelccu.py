@@ -180,9 +180,9 @@ if __name__ == '__main__':
     if(args.lrscheduler):
         scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
 
-    train, valid, test = ChangepointNormsDataset('train', args.utterances_before, args.utterances_after), \
-                   ChangepointNormsDataset('val', args.utterances_before, args.utterances_after),\
-                      ChangepointNormsDataset('test', args.utterances_before, args.utterances_after)
+    train, valid, test = ChangepointNormsDataset('INTERNAL_TRAIN', args.utterances_before, args.utterances_after), \
+                   ChangepointNormsDataset('INTERNAL_VAL', args.utterances_before, args.utterances_after),\
+                      ChangepointNormsDataset('INTERNAL_TEST', args.utterances_before, args.utterances_after)
    
     
     train_loader, valid_loader, test_loader = DataLoader(train, batch_size=args.batch_size, shuffle=True), \
