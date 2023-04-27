@@ -6,7 +6,7 @@ def generate_input(split,utt_before,utt_after):
     # with open('amith-cache.pkl', 'rb') as pickle_file:
     #     content = pickle.load(pickle_file)
     print(split)
-    content = ldc_data.load_ldc_data()
+    content = ldc_data.load_ldc_data(False,True)
     result =[]
     norm_val = {
     101:'apology',
