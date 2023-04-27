@@ -48,10 +48,14 @@ def generate_input(split,utt_before,utt_after):
         cpu = []
         for chp in content[item]['changepoints']:
             cpu.append((float(chp['timestamp']),'c'))
-        print( content[item]['utterances'].keys())
-        
-        for ut in content[item]['utterances']['whisper']:
-            cpu.append((float(ut['start']),'u',float(ut['end']),ut['text']))
+
+        if type(content[item]['utterances']) is list:
+            for ut in content[item]['utterances']:
+                cpu.append((float(ut['start']),'u',float(ut['end']),ut['text']))
+        else:
+            for ut in content[item]['utterances']['whisper']:
+                cpu.append((float(ut['start']),'u',float(ut['end']),ut['text']))
+            
             
         
         cpu.sort(key=lambda x: x[0])
