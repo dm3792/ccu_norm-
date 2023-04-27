@@ -50,6 +50,7 @@ def generate_input(split,utt_before,utt_after):
             cpu.append((float(chp['timestamp']),'c'))
         
         for ut in content[item]['utterances']:
+            print(ut)
             cpu.append((float(ut['start']),'u',float(ut['end']),ut['text']))
             
         
