@@ -265,7 +265,7 @@ def add_processed_frames(file_ext, update_key, processed_files, utterances):
 #       }
 
 def load_ldc_data(include_preprocessed_audio_and_video=False, use_cache=False):
-    cache_filepath = os.path.join('/mnt/swordfish-pool2/ccu/amith-cache.pkl')
+    cache_filepath = os.path.join(BASE_DIR, '%s-cache.pkl' % getpass.getuser())
 
     if use_cache and os.path.exists(cache_filepath):
         with open(cache_filepath, 'rb') as cache_file:
