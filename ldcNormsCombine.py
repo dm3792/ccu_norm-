@@ -53,8 +53,9 @@ def generate_input(split,utt_before,utt_after):
             for ut in content[item]['utterances']:
                 cpu.append((float(ut['start']),'u',float(ut['end']),ut['text']))
         else:
-            for ut in content[item]['utterances']['whisper']:
-                cpu.append((float(ut['start']),'u',float(ut['end']),ut['text']))
+            if 'whisper' in content[item]['utterances'].keys():
+                for ut in content[item]['utterances']['whisper']:
+                    cpu.append((float(ut['start']),'u',float(ut['end']),ut['text']))
             
             
         
