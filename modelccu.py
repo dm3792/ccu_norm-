@@ -132,7 +132,7 @@ def get_ldc_changepoints(split):
 
     changepoints = []
     for file_info in load_ldc_data(include_preprocessed_audio_and_video=True, use_cache=True).values():
-        if file_info['split'] != split:
+        if split not in file_info['splits'] :
             continue
 
         for changepoint in file_info['changepoints']:
