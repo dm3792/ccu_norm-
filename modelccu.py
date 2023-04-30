@@ -140,6 +140,8 @@ def get_ldc_changepoints(split):
             changepoint['type'] = file_info['data_type']
             changepoints.append(changepoint)
 
+    print("checking ref")
+    print(changepoints)
     return changepoints
 
 if __name__ == '__main__':
