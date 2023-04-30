@@ -324,7 +324,7 @@ def score_cp(ref, hyp, delta_cp_text_thresholds, delta_cp_time_thresholds, outpu
         Path to a directory (created on demand) for output files    
     """    
     # Add text/audio/video info to hyp   
-    print(ref.head())
+    print(ref.dtypes)
     tad_add_noscore_region(ref,hyp)
 
     if len(ref) > 0:
