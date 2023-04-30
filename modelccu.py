@@ -360,14 +360,21 @@ if __name__ == '__main__':
         writer.writeheader() 
         writer.writerows(metrics_dict)
 
+    fields = ['train loss', 'val loss'] 
+
+    # with open('epoch_losses.csv', 'w', newline='') as file: 
+    #     writer = csv.DictWriter(file, fieldnames = fields)
+    #     writer.writeheader() 
+    #     writer.writerows(metrics_dict)
+
     
 
-    plt.plot(epochs_tab, train_loss_tab,label='train')
-    plt.plot(epochs_tab, val_loss_tab,label='val')
-    plt.xlabel("Epochs")
-    plt.ylabel("Loss per sample")
-    plt.legend()
-    plt.savefig('metric.png')
+    # plt.plot(epochs_tab, train_loss_tab,label='train')
+    # plt.plot(epochs_tab, val_loss_tab,label='val')
+    # plt.xlabel("Epochs")
+    # plt.ylabel("Loss per sample")
+    # plt.legend()
+    # plt.savefig('metric.png')
 
 
     
