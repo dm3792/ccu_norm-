@@ -92,12 +92,12 @@ def calculate_average_precision(
     assert filtering == 'none', 'filtering not yet supported'
 
     for ref in refs:
-        ref['Class'] = ref['timestamp']
+        ref['Class'] = str(ref['timestamp'])
         ref['start'] = ref['timestamp']
         ref['end'] = ref['timestamp']
 
     for hyp in hyps:
-        hyp['Class'] = hyp['timestamp']
+        hyp['Class'] = str(hyp['timestamp'])
         hyp['start'] = hyp['timestamp']
         hyp['end'] = hyp['timestamp']
 
@@ -140,7 +140,6 @@ def get_ldc_changepoints(split):
             changepoint['type'] = file_info['data_type']
             changepoints.append(changepoint)
 
-    print("checking ref")
     print(changepoints)
     return changepoints
 
