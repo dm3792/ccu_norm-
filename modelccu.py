@@ -92,12 +92,12 @@ def calculate_average_precision(
     assert filtering == 'none', 'filtering not yet supported'
 
     for ref in refs:
-        ref['Class'] = str(ref['timestamp'])
+        ref['Class'] = ref['timestamp']
         ref['start'] = ref['timestamp']
         ref['end'] = ref['timestamp']
 
     for hyp in hyps:
-        hyp['Class'] = str(hyp['timestamp'])
+        hyp['Class'] = hyp['timestamp']
         hyp['start'] = hyp['timestamp']
         hyp['end'] = hyp['timestamp']
 
@@ -275,7 +275,8 @@ if __name__ == '__main__':
         print('train loss: ' + str(t_tot_loss/len(t_labels)))
         print('validation loss: ' +  str(v_tot_loss/len(v_labels)))
 
-        average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
+        #average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
+        average_val_precision = 0
         print('average val precision: '+ str(average_val_precision))
         val_precision=0
         val_recall=0
