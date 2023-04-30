@@ -19,6 +19,7 @@ import csv
 from matplotlib import pyplot as plt
 
 
+plt.use('Agg')
 
 # TODO:
 # - support several different training modes:
