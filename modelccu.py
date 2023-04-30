@@ -303,6 +303,19 @@ if __name__ == '__main__':
         
         if(args.lrscheduler):
             scheduler.step()
+        
+        metrics_dict.append(
+        {
+        'Epoch':epoch,
+        'Train loss':t_tot_loss/len(t_labels), 
+        'Val loss':v_tot_loss/len(v_labels),
+        'Average val precision':average_val_precision,
+        'val precision':val_precision,
+        'val recall':val_recall,
+        'val accuracy':val_accuracy,
+        'val f1':val_f1,
+        }
+        )
 
         
 
@@ -335,22 +348,10 @@ if __name__ == '__main__':
 
     print('test loss: '+ str(te_tot_loss/len(te_labels)))
 
-    metrics_dict.append(
-        {
-        'Epoch':epoch,
-        'Train loss':t_tot_loss/len(t_labels), 
-        'Val loss':v_tot_loss/len(v_labels),
-        'Average val precision':average_val_precision,
-        'val precision':val_precision,
-        'val recall':val_recall,
-        'val accuracy':val_accuracy,
-        'val f1':val_f1,
-        'Test loss': str(te_tot_loss/len(te_labels))
-        }
-        )
+    
     
 
-    fields = ['Epoch', 'Train loss', 'Val loss','Average val precision','val precision','val recall','val accuracy','val f1','Test loss'] 
+    fields = ['Epoch', 'Train loss', 'Val loss','Average val precision','val precision','val recall','val accuracy','val f1'] 
 
     with open('model_metrics.csv', 'w', newline='') as file: 
         writer = csv.DictWriter(file, fieldnames = fields)
