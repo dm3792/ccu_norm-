@@ -29,15 +29,17 @@ def generate_input(split,utt_before,utt_after):
     118 :'respect',
     119 :'flattery'
     }
+    done=0
     for item in content:
         
        
-        if(split in content[item]['splits']):
+        if(split in content[item]['splits']) and done==1:
             continue
 
         try:
             norms = pd.read_csv('yi/'+item+'.tab', sep='\t', lineterminator='\n')
             print('success')
+            done=1
         except:
             continue
         
