@@ -34,9 +34,6 @@ from matplotlib import pyplot as plt
 
 class ChangepointNormsDataset(Dataset):
     def __init__(self, split, utterances_before, utterances_after):
-        # PRIORITY 1 (once unblocked)
-        # TODO: load the LDC dataset using the LDC loader functionality - Amith function use
-        # TODO: load the associated UIUC predicted norms for the file_ids in the split
         self.split = split
         self.utterances_before = utterances_before
         self.utterances_after = utterances_after
@@ -176,7 +173,6 @@ if __name__ == '__main__':
     model = ChangepointNormsClassifier(args.encoder).to(device)
     tokenizer = AutoTokenizer.from_pretrained(args.encoder)
     # # TODO: support configurable weight decay, higher LR for classification head
-    # # TODO: support learning rate scheduler (linear?)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
     if(args.lrscheduler):
         scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
@@ -308,18 +304,7 @@ if __name__ == '__main__':
         if(args.lrscheduler):
             scheduler.step()
 
-        metrics_dict.append(
-        {
-        'Epoch':epoch,
-        'Train loss':t_tot_loss/len(t_labels), 
-        'Val loss':v_tot_loss/len(v_labels),
-        'Average val precision':average_val_precision,
-        'val precision':val_precision,
-        'val recall':val_recall,
-        'val accuracy':val_accuracy,
-        'val f1':val_f1
-        }
-        )
+        
 
         epochs_tab.append(epoch)
         train_loss_tab.append(t_tot_loss/len(t_labels))
@@ -350,16 +335,29 @@ if __name__ == '__main__':
 
     print('test loss: '+ str(te_tot_loss/len(te_labels)))
 
+    metrics_dict.append(
+        {
+        'Epoch':epoch,
+        'Train loss':t_tot_loss/len(t_labels), 
+        'Val loss':v_tot_loss/len(v_labels),
+        'Average val precision':average_val_precision,
+        'val precision':val_precision,
+        'val recall':val_recall,
+        'val accuracy':val_accuracy,
+        'val f1':val_f1,
+        'Test loss': str(te_tot_loss/len(te_labels))
+        }
+        )
     
 
-    fields = ['Epoch', 'Train loss', 'Val loss','Average val precision','val precision','val recall','val accuracy','val f1'] 
+    fields = ['Epoch', 'Train loss', 'Val loss','Average val precision','val precision','val recall','val accuracy','val f1','Test loss'] 
 
     with open('model_metrics.csv', 'w', newline='') as file: 
         writer = csv.DictWriter(file, fieldnames = fields)
         writer.writeheader() 
         writer.writerows(metrics_dict)
 
-    fields = ['train loss', 'val loss'] 
+    #fields = ['train loss', 'val loss'] 
 
     # with open('epoch_losses.csv', 'w', newline='') as file: 
     #     writer = csv.DictWriter(file, fieldnames = fields)
