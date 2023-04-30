@@ -128,7 +128,7 @@ def calculate_average_precision(
 
 
 def get_ldc_changepoints(split):
-    assert split in {'train', 'val', 'test'}
+    assert split in {'INTERNAL_TRAIN', 'INTERNAL_VAL', 'INTERNAL_TEST'}
 
     changepoints = []
     for file_info in load_ldc_data(include_preprocessed_audio_and_video=True, use_cache=True).values():
@@ -270,7 +270,7 @@ if __name__ == '__main__':
             )
         ]
 
-        valid_ldc_changepoints = get_ldc_changepoints('val')
+        valid_ldc_changepoints = get_ldc_changepoints('INTERNAL_VAL')
         
         print('end of epoch:  ' + str(epoch))
         print('train loss: ' + str(t_tot_loss/len(t_labels)))
