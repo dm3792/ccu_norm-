@@ -137,7 +137,6 @@ def get_ldc_changepoints(split):
             changepoint['type'] = file_info['data_type']
             changepoints.append(changepoint)
 
-    print(changepoints)
     return changepoints
 
 if __name__ == '__main__':
@@ -225,9 +224,12 @@ if __name__ == '__main__':
             v_tokenized = tokenize(
                 v_batch, tokenizer, args
             ).to(device)
+            print(v_tokenized)
             v_logits = model(v_tokenized)
+            print(v_logits)
             crazy = v_batch['label']
             crazy = crazy.unsqueeze(1)
+            print(crazy)
             v_loss = nn.BCEWithLogitsLoss()(
                 v_logits.float(), crazy.float().to(device)
             )
