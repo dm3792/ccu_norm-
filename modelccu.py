@@ -69,10 +69,7 @@ class ChangepointNormsClassifier(nn.Module):
         # return logits
 
 def tokenize(batch, tokenizer, args):
-    print('batch stuff')
-    print(batch['norms'])
-    print(batch['utterance'])
-    print(args.include_utterance)
+
     if args.include_utterance:
         return tokenizer(
             batch['norms'],
@@ -233,7 +230,6 @@ if __name__ == '__main__':
             v_tokenized = tokenize(
                 v_batch, tokenizer, args
             ).to(device)
-            print(v_tokenized)
             v_logits = model(v_tokenized)
             print(v_logits)
             crazy = v_batch['label']
