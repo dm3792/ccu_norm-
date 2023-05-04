@@ -66,7 +66,7 @@ class ChangepointNormsClassifier(nn.Module):
 def tokenize(batch, tokenizer, args):
     print('batch stuff')
     print(batch['norms'])
-    print(batch['utternace'])
+    print(batch['utterance'])
     print(args.include_utterance)
     if args.include_utterance:
         return tokenizer(
