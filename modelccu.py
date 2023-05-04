@@ -291,11 +291,14 @@ if __name__ == '__main__':
         val_recall=0
         val_f1=0
         val_accuracy=0
-        if(tp+fp!=0 and tp+fn!=0):
+        if(tp+fp!=0):
             val_precision = tp/(tp+fp)
+        if(tp+fn!=0):
             val_recall = tp/(tp+fn)
-            val_f1 = val_precision*val_recall/(val_precision+val_recall)
+        if(tp+tn+fp+fn!=0):
             val_accuracy= ((tp+tn)/(tp+tn+fp+fn))
+        if(val_precision+val_recall!=0):
+            val_f1 = val_precision*val_recall/(val_precision+val_recall)
         print('validation precision: ' +  str(val_precision))
         print('validation recall: ' +  str(val_recall))
         print('validation accuracy: ' +  str(val_accuracy))
