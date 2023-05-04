@@ -231,28 +231,21 @@ if __name__ == '__main__':
                 v_batch, tokenizer, args
             ).to(device)
             v_logits = model(v_tokenized)
-            print(v_logits)
             crazy = v_batch['label']
             crazy = crazy.unsqueeze(1)
-            print(crazy)
             v_loss = nn.BCEWithLogitsLoss()(
                 v_logits.float(), crazy.float().to(device)
             )
 
             for i, val in enumerate(torch.sigmoid(v_logits)):
-                print(i)
-                print(val)
+             
                 if val<0.5 and crazy[i]==0:
-                    print("a")
                     tn+=1
                 elif val<0.5 and crazy[i]==1:
-                    print("b")
                     fn+=1
                 elif val>0.5 and crazy[i]==0:
-                    print("c")
                     fp+=1
                 else:
-                    print("d")
                     tp+=1
             
 
