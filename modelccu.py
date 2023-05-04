@@ -243,12 +243,16 @@ if __name__ == '__main__':
                 print(i)
                 print(val)
                 if val<0.5 and crazy[i]==0:
+                    print("a")
                     tn+=1
                 elif val<0.5 and crazy[i]==1:
+                    print("b")
                     fn+=1
                 elif val>0.5 and crazy[i]==0:
+                    print("c")
                     fp+=1
                 else:
+                    print("d")
                     tp+=1
             
 
