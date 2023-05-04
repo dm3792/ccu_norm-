@@ -218,7 +218,7 @@ if __name__ == '__main__':
             optimizer.step()
 
             t_tot_loss += t_loss.item()
-            t_preds.extend(t_logits.detach().cpu().numpy())
+            t_preds.extend(torch.sigmoid(t_logits).detach().cpu().numpy())
             t_labels.extend(t_batch['label'].numpy())
         
 
@@ -243,7 +243,7 @@ if __name__ == '__main__':
                 v_logits.float(), crazy.float().to(device)
             )
 
-            for i, val in enumerate(v_logits):
+            for i, val in enumerate(torch.sigmoid(v_logits)):
                 print(i)
                 print(val)
                 if val<0.5 and crazy[i]==0:
@@ -259,7 +259,7 @@ if __name__ == '__main__':
 
             v_tot_loss += v_loss.item()
             for v_file, v_pred, v_label in zip(
-                v_batch['file_id'], v_logits.detach().cpu().numpy(), v_batch['label'].numpy()
+                v_batch['file_id'], torch.sigmoid(v_logits).detach().cpu().numpy(), v_batch['label'].numpy()
             ):
                 v_preds[v_file].append(v_pred)
                 v_labels[v_file].append(v_label)
@@ -354,9 +354,9 @@ if __name__ == '__main__':
 
         te_tot_loss += te_loss.item()
         for te_file, te_pred, te_label in zip(
-            te_batch['file_id'], te_logits.detach().cpu().numpy(), te_batch['label'].numpy()
+            te_batch['file_id'], torch.sigmoid(te_logits).detach().cpu().numpy(), te_batch['label'].numpy()
         ):
-            te_preds[te_file].append(te_pred)
+            te_preds[te_file].append(torch.sigmoid(te_logits))
             te_labels[te_file].append(te_label)
 
     print('test loss: '+ str(te_tot_loss/len(te_labels)))
