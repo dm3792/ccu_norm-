@@ -53,15 +53,20 @@ class ChangepointNormsDataset(Dataset):
 class ChangepointNormsClassifier(nn.Module):
     def __init__(self, encoder):
         super().__init__()
+        
         self.model = AutoModel.from_pretrained(encoder)
         # TODO: make the complexity of the classifier configurable (eg, more layers, etc)
         self.classifier = nn.Linear(self.model.config.hidden_size, 1)
 
     def forward(self, inputs):
         outputs = self.model(**inputs)
-        # pass CLS token representation through classifier
-        logits = self.classifier(outputs.last_hidden_state[:, 0, :])
+        last_hidden_state = outputs.last_hidden_state
+        pooled_output = last_hidden_state[:, 0]
+        logits = self.classifier(pooled_output)
         return logits
+        # pass CLS token representation through classifier
+        # logits = self.classifier(outputs.last_hidden_state[:, 0, :])
+        # return logits
 
 def tokenize(batch, tokenizer, args):
     print('batch stuff')
