@@ -233,6 +233,8 @@ if __name__ == '__main__':
             )
 
             for i, val in enumerate(v_logits):
+                print(i)
+                print(val)
                 if val<0.5 and crazy[i]==0:
                     tn+=1
                 elif val<0.5 and crazy[i]==1:
