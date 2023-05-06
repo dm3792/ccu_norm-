@@ -211,20 +211,25 @@ if __name__ == '__main__':
             t_logits = model(t_tokenized)
             actual = t_batch['label']
             actual = actual.unsqueeze(1)
+
+
+
             t_loss = nn.BCEWithLogitsLoss()(
                 t_logits.float(), actual.float().to(device))
             
-            # if(args.regularisation=='l1'):
-            #     l1_reg = torch.tensor(0.)
-            #     for param in model.parameters():
-            #         l1_reg += torch.norm(param, 1)
-            #     t_loss += l1_lambda * l1_reg
+            if(args.regularisation=='l1'):
+                regularization_loss = 0
+                for param in model.parameters():
+                    regularization_loss += torch.norm(param, 1)
+                
+                t_loss += l1_lambda * regularization_loss
 
-            # if(args.regularisation=='l2'):
-            #     l2_reg = torch.tensor(0.)
-            #     for param in model.parameters():
-            #         l2_reg += torch.norm(param, 2)
-            #     t_loss += l2_lambda * l2_reg
+            if(args.regularisation=='l1'):
+                regularization_loss = 0
+                for param in model.parameters():
+                    regularization_loss += torch.norm(param, 2)
+                
+                t_loss += l2_lambda * regularization_loss
             
             if(args.regularisation=='dropout'):
                 t_logits = torch.nn.functional.dropout(t_logits, p=dropout_prob)
@@ -383,7 +388,7 @@ if __name__ == '__main__':
 
     fields = ['Epoch', 'Train loss', 'Val loss','Average val precision','val precision','val recall','val accuracy','val f1'] 
 
-    with open('model_metrics'+str(args.regularisation)+str(args.lr)+'.csv', 'w', newline='') as file: 
+    with open('model_metrics'+str(args.regularisation)+str(args.learning_rate)+'.csv', 'w', newline='') as file: 
         writer = csv.DictWriter(file, fieldnames = fields)
         writer.writeheader() 
         writer.writerows(metrics_dict)
