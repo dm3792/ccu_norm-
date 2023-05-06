@@ -4,7 +4,7 @@ from collections import defaultdict
 import torch
 from torch import nn
 from torch.utils.data import Dataset, DataLoader
-from transformers import AutoModel, AutoTokenizer
+from transformers import AutoModel, AutoTokenizer, AutoConfig
 from sklearn.model_selection import train_test_split
 import copy
 import math
@@ -51,10 +51,11 @@ class ChangepointNormsDataset(Dataset):
 
 
 class ChangepointNormsClassifier(nn.Module):
-    def __init__(self, encoder):
+    def __init__(self, encoder,downsample):
         super().__init__()
-        
-        self.model = AutoModel.from_pretrained(encoder)
+        config = AutoConfig.from_pretrained(encoder)
+        config.update({'conv_stride': downsample})
+        self.model = AutoModel.from_pretrained(encoder,config)
         # TODO: make the complexity of the classifier configurable (eg, more layers, etc)
         self.classifier = nn.Linear(self.model.config.hidden_size, 1)
 
@@ -153,7 +154,8 @@ if __name__ == '__main__':
     parser.add_argument('--downsample', type=float, default=1.0)
     parser.add_argument('--include-utterance', action='store_true')
     parser.add_argument('--encoder', type=str, default='xlm-roberta-base')
-    # TODO: support dropout
+    parser.add_argument('--regularisation', type=str, default='l2')
+    parser.add_argument('--downsample', type=int, default=2)
     # TODO: support different learning rates for pretrained encoder and randomly initialized classificatin head (should be higher)
     parser.add_argument('--learning-rate', '--lr', type=float, default=1e-5)
     parser.add_argument('--lrscheduler', action='store_true')
@@ -165,6 +167,9 @@ if __name__ == '__main__':
     parser.add_argument('--weight_decay', type=float, default=1e-5)
     args = parser.parse_args()
 
+    l1_lambda = 0.01
+    l2_lambda = 0.01
+    dropout_prob = 0.1
     # PRIORITY 1
     # TODO: create output directory for experiment results using variant name, store argument configs there as config.json
 
@@ -175,7 +180,7 @@ if __name__ == '__main__':
         assert torch.cuda.is_available()
     device = torch.device(args.device)
 
-    model = ChangepointNormsClassifier(args.encoder).to(device)
+    model = ChangepointNormsClassifier(args.encoder,args.downsample).to(device)
     tokenizer = AutoTokenizer.from_pretrained(args.encoder)
     # # TODO: support configurable weight decay, higher LR for classification head
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
@@ -210,6 +215,23 @@ if __name__ == '__main__':
             t_loss = nn.BCEWithLogitsLoss()(
                 t_logits.float(), actual.float().to(device))
             
+            if(args.regularisation=='l1'):
+                l1_reg = torch.tensor(0.)
+                for param in model.parameters():
+                    l1_reg += torch.norm(param, 1)
+                t_loss += l1_lambda * l1_reg
+
+            if(args.regularisation=='l2'):
+                l2_reg = torch.tensor(0.)
+                for param in model.parameters():
+                    l2_reg += torch.norm(param, 2)
+                t_loss += l2_lambda * l2_reg
+            
+            if(args.regularisation=='dropout'):
+                t_logits = torch.nn.functional.dropout(t_logits, p=dropout_prob)
+        
+
+
             t_loss.backward()
 
             optimizer.step()
@@ -362,7 +384,7 @@ if __name__ == '__main__':
 
     fields = ['Epoch', 'Train loss', 'Val loss','Average val precision','val precision','val recall','val accuracy','val f1'] 
 
-    with open('model_metrics.csv', 'w', newline='') as file: 
+    with open('model_metrics'+str(args.regularisation)+str(args.lr)+'.csv', 'w', newline='') as file: 
         writer = csv.DictWriter(file, fieldnames = fields)
         writer.writeheader() 
         writer.writerows(metrics_dict)
