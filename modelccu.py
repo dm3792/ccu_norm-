@@ -129,13 +129,16 @@ def calculate_average_precision(
     return APs
 
 
-
+def calculate_llrs(logits):
+    assert len(logits.shape) == 1
+    probs = torch.sigmoid(logits)
+    return torch.log(probs / (1 - probs))
 
 def get_ldc_changepoints(split):
     assert split in {'INTERNAL_TRAIN', 'INTERNAL_VAL', 'INTERNAL_TEST'}
 
     changepoints = []
-    for file_info in load_ldc_data(include_preprocessed_audio_and_video=True, use_cache=True).values():
+    for file_info in load_ldc_data(include_preprocessed_audio_and_video=False, use_cache=True).values():
         if split not in file_info['splits'] :
             continue
 
@@ -284,14 +287,14 @@ if __name__ == '__main__':
                 v_labels[v_file].append(v_label)
                 v_file_ids.extend(v_batch['file_id'])
                 v_data_types.extend(v_batch['data_type'])
-                v_timestamps.extend(v_batch['timestamp'].numpy())
-                v_llrs.extend(nn.LogSigmoid()(v_logits).detach().cpu().numpy().tolist())
+                v_timestamps.extend(v_batch['timestamp'])
+                v_llrs.extend(calculate_llrs(v_logits).detach().cpu().numpy().tolist())
         valid_ldc_predictions = [
             {
                 'file_id': file_id,
                 'type': data_type,
                 'timestamp': timestamp,
-                'llr': llr[0]
+                'llr': llr
             } for file_id, data_type, timestamp, llr in zip(
                 v_file_ids, v_data_types, v_timestamps, v_llrs
             )
@@ -303,7 +306,7 @@ if __name__ == '__main__':
         print('train loss: ' + str(t_tot_loss/len(t_labels)))
         print('validation loss: ' +  str(v_tot_loss/len(v_labels)))
 
-        #average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
+        average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
         average_val_precision = 0
         print('average val precision: '+ str(average_val_precision))
         val_precision=0
