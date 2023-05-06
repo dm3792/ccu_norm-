@@ -17,6 +17,9 @@ import pandas as pd
 from scoring import score_cp
 import csv 
 from matplotlib import pyplot as plt
+import random
+from functools import partial
+from multiprocessing import Pool
 
 
 
@@ -87,14 +90,145 @@ def tokenize(batch, tokenizer, args):
             truncation=True
         )
     
+def filter_file_system_preds(file_system_preds, text_char_threshold, time_sec_threshold, filtering):
+    file_system_preds = list(sorted(
+        file_system_preds,
+        key=lambda file_pred: float(file_pred['timestamp'])
+    ))
+
+    if len(file_system_preds) <= 1:
+        return file_system_preds
+
+    if file_system_preds[0]['type'] == 'text':
+        distance_threshold = text_char_threshold
+    else:
+        assert file_system_preds[0]['type'] in {'audio', 'video'}
+        distance_threshold = time_sec_threshold
+
+    to_remove = set()
+    while True:
+        candidates = []
+        remaining_idxs = list(sorted(set(range(len(file_system_preds))) - to_remove))
+
+        if len(remaining_idxs) <= 1:
+            break
+
+        for i in range(len(remaining_idxs)):
+            distance_before, distance_after = -1, -1
+
+            remaining_idx = remaining_idxs[i]
+            if i > 0:
+                before_idx = remaining_idxs[i - 1]
+                distance_before = file_system_preds[remaining_idx]['timestamp'] - file_system_preds[before_idx][
+                    'timestamp']
+            else:
+                before_idx = None
+
+            if i < len(remaining_idxs) - 1:
+                after_idx = remaining_idxs[i + 1]
+                distance_after = file_system_preds[after_idx]['timestamp'] - file_system_preds[remaining_idx][
+                    'timestamp']
+            else:
+                after_idx = None
+
+            # if the adjacent predictions are too close, we should consider removing it
+            if max(distance_before, distance_after) < distance_threshold:
+                if filtering == 'highest':
+                    sort_key = -1 * float(file_system_preds[remaining_idx]['llr'])
+                elif filtering == 'lowest':
+                    sort_key = float(file_system_preds[remaining_idx]['llr'])
+                elif filtering == 'most_similar':
+                    sort_key = -1 * math.inf
+                    if before_idx is not None:
+                        sort_key = max(
+                            sort_key,
+                            abs(
+                                float(file_system_preds[remaining_idx]['llr']) -
+                                float(file_system_preds[before_idx]['llr'])
+                            )
+                        )
+
+                    if after_idx is not None:
+                        sort_key = max(
+                            sort_key,
+                            abs(
+                                float(file_system_preds[remaining_idx]['llr']) -
+                                float(file_system_preds[after_idx]['llr'])
+                            )
+                        )
+                else:
+                    raise ValueError(f'Unknown filtering type: {filtering}')
+
+                candidates.append((sort_key, remaining_idx))
+
+        if len(candidates) == 0:
+            break
+
+        candidates = list(sorted(candidates))
+        to_remove.add(candidates[0][1])
+
+    return [
+        file_system_preds[i] for i in range(len(file_system_preds)) if i not in to_remove
+    ] 
+
+def filter_system_preds(system_preds, text_char_threshold, time_sec_threshold, filtering, n_jobs=1):
+    if filtering == 'none':
+        return system_preds
+
+    assert filtering in {'highest', 'lowest', 'most_similar'}
+
+    by_file = defaultdict(list)
+    for system_pred in system_preds:
+        by_file[system_pred['file_id']].append(system_pred)
+
+    if n_jobs == 1:
+        filtered_system_preds = []
+        for file_id, file_system_preds in tqdm(by_file.items(), desc='filtering system predictions', leave=False):
+            filtered_system_preds.extend(
+                filter_file_system_preds(file_system_preds, text_char_threshold, time_sec_threshold, filtering)
+            )
+    else:
+        by_file_preds = list(by_file.values())
+        random.shuffle(by_file_preds)
+        with Pool(n_jobs) as pool:
+            filtered_system_preds = list(
+                tqdm(
+                    pool.imap_unordered(
+                        partial(
+                            filter_file_system_preds,
+                            text_char_threshold=text_char_threshold,
+                            time_sec_threshold=time_sec_threshold,
+                            filtering=filtering
+                        ),
+                        by_file_preds,
+                        chunksize=50
+                    ),
+                    total=len(by_file_preds),
+                    desc='filtering system predictions',
+                    leave=False
+                )
+            )
+        filtered_system_preds = [
+            system_pred for file_system_preds in filtered_system_preds
+            for system_pred in file_system_preds
+        ]
+
+    return filtered_system_preds
+
 def calculate_average_precision(
         refs, hyps,
         text_char_threshold=100,
         time_sec_threshold=10,
-        filtering='none'
+        filtering='none',
+        n_jobs=1
 ):
-    assert filtering == 'none', 'filtering not yet supported'
+    hyps = filter_system_preds(
+        hyps, text_char_threshold,
+        time_sec_threshold, filtering, n_jobs=n_jobs
+    )
 
+    # NIST uses non-zero values of "Class" to indicate annotations / predictions
+    # in LDC's randomly selected annotation regions
     for ref in refs:
         ref['Class'] = ref['timestamp']
         ref['start'] = ref['timestamp']
@@ -110,7 +244,7 @@ def calculate_average_precision(
 
     output_dir = 'tmp_scoring_%s' % os.getpid()
     os.makedirs(output_dir, exist_ok=True)
-   
+
     score_cp(
         ref_df, hyp_df,
         delta_cp_text_thresholds=[text_char_threshold],

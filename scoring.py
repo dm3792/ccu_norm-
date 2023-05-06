@@ -324,7 +324,6 @@ def score_cp(ref, hyp, delta_cp_text_thresholds, delta_cp_time_thresholds, outpu
         Path to a directory (created on demand) for output files    
     """    
     # Add text/audio/video info to hyp   
-    print(ref.dtypes)
     tad_add_noscore_region(ref,hyp)
 
     if len(ref) > 0:
@@ -353,4 +352,3 @@ def score_cp(ref, hyp, delta_cp_text_thresholds, delta_cp_time_thresholds, outpu
     make_pr_curve_for_cd(pr_iou_scores, "cd", "cd", output_dir, info_dict = graph_info_dict)
     graph_info_df = pd.DataFrame(graph_info_dict)
     graph_info_df.to_csv(os.path.join(output_dir, "graph_info.tab"), index = False, quoting=3, sep="\t", escapechar="\t")
-    
