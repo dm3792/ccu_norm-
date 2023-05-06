@@ -264,6 +264,7 @@ def calculate_average_precision(
 
 
 def calculate_llrs(logits):
+    print(logits.shape)
     assert len(logits.shape) == 1
     probs = torch.sigmoid(logits)
     return torch.log(probs / (1 - probs))
