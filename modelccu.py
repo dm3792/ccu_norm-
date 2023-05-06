@@ -151,7 +151,6 @@ if __name__ == '__main__':
     parser.add_argument('--variant', type=str)
     parser.add_argument('--utterances-before', type=int, default=1)
     parser.add_argument('--utterances-after', type=int, default=1)
-    parser.add_argument('--downsample', type=float, default=1.0)
     parser.add_argument('--include-utterance', action='store_true')
     parser.add_argument('--encoder', type=str, default='xlm-roberta-base')
     parser.add_argument('--regularisation', type=str, default='l2')
