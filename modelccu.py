@@ -230,7 +230,7 @@ if __name__ == '__main__':
                 t_logits = torch.nn.functional.dropout(t_logits, p=dropout_prob)
         
 
-
+            t_loss.to(device)
             t_loss.backward()
 
             optimizer.step()
