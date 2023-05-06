@@ -264,6 +264,8 @@ def calculate_average_precision(
 
 
 def calculate_llrs(logits):
+    print(logits.shape)
+    assert len(logits.shape) == 1
     probs = torch.sigmoid(logits)
     return torch.log(probs / (1 - probs))
 
@@ -421,7 +423,7 @@ if __name__ == '__main__':
                 v_file_ids.extend(v_batch['file_id'])
                 v_data_types.extend(v_batch['data_type'])
                 v_timestamps.extend(v_batch['timestamp'])
-                v_llrs.extend(nn.LogSigmoid(v_logits).detach().cpu().numpy().tolist())
+                v_llrs.extend(calculate_llrs(v_logits).squeeze().detach().cpu().numpy().tolist())
         valid_ldc_predictions = [
             {
                 'file_id': file_id,
