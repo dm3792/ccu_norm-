@@ -208,11 +208,11 @@ if __name__ == '__main__':
             t_tokenized = tokenize(
                 t_batch, tokenizer, args
             ).to(device)
-            t_logits = model(t_tokenized)
+            t_logits = model(t_tokenized).to(device)
             actual = t_batch['label']
-            actual = actual.unsqueeze(1)
+            actual = actual.unsqueeze(1).to(device)
             t_loss = nn.BCEWithLogitsLoss()(
-                t_logits.float(), actual.float().to(device))
+                t_logits.float(), actual.float()).to(device)
             
             if(args.regularisation=='l1'):
                 l1_reg = torch.tensor(0.)
@@ -228,6 +228,7 @@ if __name__ == '__main__':
             
             if(args.regularisation=='dropout'):
                 t_logits = torch.nn.functional.dropout(t_logits, p=dropout_prob)
+
         
 
             t_loss.to(device)
