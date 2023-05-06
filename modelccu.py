@@ -208,30 +208,29 @@ if __name__ == '__main__':
             t_tokenized = tokenize(
                 t_batch, tokenizer, args
             ).to(device)
-            t_logits = model(t_tokenized).to(device)
+            t_logits = model(t_tokenized)
             actual = t_batch['label']
-            actual = actual.unsqueeze(1).to(device)
+            actual = actual.unsqueeze(1)
             t_loss = nn.BCEWithLogitsLoss()(
-                t_logits.float(), actual.float()).to(device)
+                t_logits.float(), actual.float().to(device))
             
-            if(args.regularisation=='l1'):
-                l1_reg = torch.tensor(0.)
-                for param in model.parameters():
-                    l1_reg += torch.norm(param, 1)
-                t_loss += l1_lambda * l1_reg
+            # if(args.regularisation=='l1'):
+            #     l1_reg = torch.tensor(0.)
+            #     for param in model.parameters():
+            #         l1_reg += torch.norm(param, 1)
+            #     t_loss += l1_lambda * l1_reg
 
-            if(args.regularisation=='l2'):
-                l2_reg = torch.tensor(0.)
-                for param in model.parameters():
-                    l2_reg += torch.norm(param, 2)
-                t_loss += l2_lambda * l2_reg
+            # if(args.regularisation=='l2'):
+            #     l2_reg = torch.tensor(0.)
+            #     for param in model.parameters():
+            #         l2_reg += torch.norm(param, 2)
+            #     t_loss += l2_lambda * l2_reg
             
             if(args.regularisation=='dropout'):
                 t_logits = torch.nn.functional.dropout(t_logits, p=dropout_prob)
 
         
 
-            t_loss.to(device)
             t_loss.backward()
 
             optimizer.step()
