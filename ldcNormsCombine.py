@@ -122,7 +122,7 @@ def generate_input(split,utt_before,utt_after):
 
                     example = {
                     "file_id": item,
-                    "timestamp": start_time, 
+                    "timestamp": float(start_time), 
                     "utterance": utt,
                     "norms": norm_string,
                     "label": cp,
