@@ -20,8 +20,7 @@ from matplotlib import pyplot as plt
 import random
 from functools import partial
 from multiprocessing import Pool
-
-
+from scoring.average_precision import calculate_average_precision
 
 # TODO:
 # - support several different training modes:
@@ -215,52 +214,52 @@ def filter_system_preds(system_preds, text_char_threshold, time_sec_threshold, f
 
     return filtered_system_preds
 
-def calculate_average_precision(
-        refs, hyps,
-        text_char_threshold=100,
-        time_sec_threshold=10,
-        filtering='none',
-        n_jobs=1
-):
-    hyps = filter_system_preds(
-        hyps, text_char_threshold,
-        time_sec_threshold, filtering, n_jobs=n_jobs
-    )
+# # def calculate_average_precision(
+#         refs, hyps,
+#         text_char_threshold=100,
+#         time_sec_threshold=10,
+#         filtering='none',
+#         n_jobs=1
+# ):
+#     hyps = filter_system_preds(
+#         hyps, text_char_threshold,
+#         time_sec_threshold, filtering, n_jobs=n_jobs
+#     )
 
-    # NIST uses non-zero values of "Class" to indicate annotations / predictions
-    # in LDC's randomly selected annotation regions
-    for ref in refs:
-        ref['Class'] = ref['timestamp']
-        ref['start'] = ref['timestamp']
-        ref['end'] = ref['timestamp']
+#     # NIST uses non-zero values of "Class" to indicate annotations / predictions
+#     # in LDC's randomly selected annotation regions
+#     for ref in refs:
+#         ref['Class'] = ref['timestamp']
+#         ref['start'] = ref['timestamp']
+#         ref['end'] = ref['timestamp']
 
-    for hyp in hyps:
-        hyp['Class'] = hyp['timestamp']
-        hyp['start'] = hyp['timestamp']
-        hyp['end'] = hyp['timestamp']
+#     for hyp in hyps:
+#         hyp['Class'] = hyp['timestamp']
+#         hyp['start'] = hyp['timestamp']
+#         hyp['end'] = hyp['timestamp']
 
-    ref_df = pd.DataFrame.from_records(refs)
-    hyp_df = pd.DataFrame.from_records(hyps)
+#     ref_df = pd.DataFrame.from_records(refs)
+#     hyp_df = pd.DataFrame.from_records(hyps)
 
-    output_dir = 'tmp_scoring_%s' % os.getpid()
-    os.makedirs(output_dir, exist_ok=True)
+#     output_dir = 'tmp_scoring_%s' % os.getpid()
+#     os.makedirs(output_dir, exist_ok=True)
 
-    score_cp(
-        ref_df, hyp_df,
-        delta_cp_text_thresholds=[text_char_threshold],
-        delta_cp_time_thresholds=[time_sec_threshold],
-        output_dir=output_dir
-    )
+#     score_cp(
+#         ref_df, hyp_df,
+#         delta_cp_text_thresholds=[text_char_threshold],
+#         delta_cp_time_thresholds=[time_sec_threshold],
+#         output_dir=output_dir
+#     )
 
-    APs, score_df = {}, pd.read_csv(
-        os.path.join(output_dir, 'scores_by_class.tab'), delimiter='\t'
-    )
-    for _, row in score_df[score_df['metric'] == 'AP'].iterrows():
-        APs[row['genre']] = float(row['value'])
+#     APs, score_df = {}, pd.read_csv(
+#         os.path.join(output_dir, 'scores_by_class.tab'), delimiter='\t'
+#     )
+#     for _, row in score_df[score_df['metric'] == 'AP'].iterrows():
+#         APs[row['genre']] = float(row['value'])
 
-    shutil.rmtree(output_dir)
+#     shutil.rmtree(output_dir)
 
-    return APs
+#     return APs
 
 
 def calculate_llrs(logits):
