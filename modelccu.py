@@ -448,11 +448,12 @@ if __name__ == '__main__':
         print("-------------")
         print(valid_ldc_predictions[0])
 
-        with open('output1.json', 'w') as my_file:
-            json.dump(valid_ldc_changepoints, my_file) 
-
-        with open("output2.json", "w") as txt_file:
-            json.dump(valid_ldc_predictions, my_file)
+        with open('your_file1.txt', 'w') as f:
+            for line in valid_ldc_changepoints:
+                f.write(f"{line}\n")
+        with open('your_file2.txt', 'w') as f:
+            for line in valid_ldc_changepoints:
+                f.write(f"{line}\n")
 
 
         average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
