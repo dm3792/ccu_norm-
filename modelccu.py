@@ -14,7 +14,7 @@ import os
 import sys
 import shutil
 import pandas as pd
-from scoring import score_cp
+# from scoring import score_cp
 import csv 
 from matplotlib import pyplot as plt
 import random
