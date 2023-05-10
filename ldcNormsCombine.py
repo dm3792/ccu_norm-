@@ -4,21 +4,21 @@ from loaders import ldc_data
 import pickle
 
 def generate_input(split,utt_before,utt_after,cf):
-    # with open('train_1.pkl', 'rb') as pickle_file:
-    #     content = pickle.load(pickle_file)
+    with open('train_1.pkl', 'rb') as pickle_file:
+        content = pickle.load(pickle_file)
 
-    # if split=="INTERNAL_TRAIN":
-    #     with open('train_1.pickle', 'rb') as pickle_file:
-    #         content = pickle.load(pickle_file)
-    #         return content
-    # elif split=="INTERNAL_VAL":
-    #     with open('val_1.pickle', 'rb') as pickle_file:
-    #         content = pickle.load(pickle_file)
-    #         return content
-    # else:
-    #     with open('test_1.pickle', 'rb') as pickle_file:
-    #         content = pickle.load(pickle_file)
-    #         return content
+    if split=="INTERNAL_TRAIN":
+        with open('train_1.pickle', 'rb') as pickle_file:
+            content = pickle.load(pickle_file)
+            return content
+    elif split=="INTERNAL_VAL":
+        with open('val_1.pickle', 'rb') as pickle_file:
+            content = pickle.load(pickle_file)
+            return content
+    else:
+        with open('test_1.pickle', 'rb') as pickle_file:
+            content = pickle.load(pickle_file)
+            return content
 
 
     print(split)
