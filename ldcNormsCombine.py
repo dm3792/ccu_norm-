@@ -109,10 +109,11 @@ def generate_input(split,utt_before,utt_after):
                     ad = set()
                     vi = set()
                     for i in norm_list:
-                        if df.loc[[i]]['status'].values[0]=='adhere':
-                            ad.add(df.loc[[i]]['norm'].values[0])
-                        if df.loc[[i]]['status'].values[0]=='violate':
-                            ad.add(df.loc[[i]]['norm'].values[0])
+                        if df.loc[[i]]['llr'].values[0]>-2.9:
+                            if df.loc[[i]]['status'].values[0]=='adhere':
+                                ad.add(df.loc[[i]]['norm'].values[0])
+                            if df.loc[[i]]['status'].values[0]=='violate':
+                                ad.add(df.loc[[i]]['norm'].values[0])
 
                     norm_string = "ADHERE:"
                     for i in ad:
