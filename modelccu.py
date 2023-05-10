@@ -443,8 +443,19 @@ if __name__ == '__main__':
         print(valid_ldc_changepoints[0])
         print("-------------")
         print(valid_ldc_predictions[0])
-        # average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
-        average_val_precision = 0
+
+        with open("output1.txt", "w") as txt_file:
+            for line in valid_ldc_changepoints:
+                txt_file.write(" ".join(line) + "\n") 
+
+        with open("output2.txt", "w") as txt_file:
+            for line in valid_ldc_predictions:
+                txt_file.write(" ".join(line) + "\n") 
+
+
+        average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
+        
+        #average_val_precision = 0
         print('average val precision: '+ str(average_val_precision))
         val_precision=0
         val_recall=0

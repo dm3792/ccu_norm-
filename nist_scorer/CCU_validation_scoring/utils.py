@@ -27,20 +27,20 @@ def tad_add_noscore_region(ref,hyp):
 	Convert noann class into NO_SCORE_REGION in ref and remove noann class in hyp
 	"""    
 	
-	gtnan = ref[ref.Class.astype(str) == silence_string]
+	gtnan = ref[ref.Class == silence_string]
 	gtnanl = len(gtnan)
 	print(gtnanl);
 	print('----')
 	if gtnanl > 0:
 		# logger.warning("Reference contains {} no-score regions.".format(gtnanl))
-		ref.loc[ref.Class.astype(str) == silence_string, "Class"]= "NO_SCORE_REGION"
+		ref.loc[ref.Class == silence_string, "Class"]= "NO_SCORE_REGION"
 
-	prednan = hyp[hyp.Class.astype(str) == silence_string]
+	prednan = hyp[hyp.Class == silence_string]
 	prednanl = len(prednan)
 	if prednanl > 0:
 		logger = logging.getLogger('SCORING')
 		logger.warning("Invalid or NaN Class in system-output detected. Dropping {} entries".format(prednanl))
-		hyp.drop(hyp[hyp['Class'].astype(str) == silence_string].index, inplace = True)
+		hyp.drop(hyp[hyp['Class'] == silence_string].index, inplace = True)
 		hyp.drop(hyp[hyp.Class.isna()].index, inplace = True)
 
 def ap_interp(prec, rec):
