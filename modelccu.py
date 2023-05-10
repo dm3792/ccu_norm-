@@ -439,6 +439,9 @@ if __name__ == '__main__':
         print('train loss: ' + str(t_tot_loss/len(t_labels)))
         print('validation loss: ' +  str(v_tot_loss/len(v_labels)))
 
+        print(valid_ldc_changepoints[0])
+        print("-------------")
+        print(valid_ldc_predictions[0])
         average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
         average_val_precision = 0
         print('average val precision: '+ str(average_val_precision))
