@@ -3,7 +3,7 @@ import loaders
 from loaders import ldc_data
 import pickle
 
-def generate_input(split,utt_before,utt_after):
+def generate_input(split,utt_before,utt_after,cf):
     # with open('amith-cache.pkl', 'rb') as pickle_file:
     #     content = pickle.load(pickle_file)
     print(split)
@@ -109,7 +109,7 @@ def generate_input(split,utt_before,utt_after):
                     ad = set()
                     vi = set()
                     for i in norm_list:
-                        if df.loc[[i]]['llr'].values[0]>-2.9:
+                        if (cf and df.loc[[i]]['llr'].values[0]>-2.9) or (not cf):
                             if df.loc[[i]]['status'].values[0]=='adhere':
                                 ad.add(df.loc[[i]]['norm'].values[0])
                             if df.loc[[i]]['status'].values[0]=='violate':
