@@ -22,7 +22,7 @@ from functools import partial
 from multiprocessing import Pool
 from scoring.average_precision import calculate_average_precision
 import json
-
+import numpy as np
 
 # TODO:
 # - support several different training modes:
@@ -35,6 +35,26 @@ import json
 # - it should have early stopping guided by average precision on the validation set
 
 # utterance1<NA1 utterance2<NV2 utterance3<CP,NV2 utterance4 utterance5
+
+class EarlyStopping:
+    def __init__(self, patience=5, delta=0.0):
+        self.patience = patience
+        self.delta = delta
+        self.counter = 0
+        self.best_score = None
+        self.early_stop = False
+        self.val_loss_min = np.Inf
+
+    def __call__(self, val_loss):
+        if self.best_score is None:
+            self.best_score = val_loss
+        elif val_loss > self.best_score + self.delta:
+            self.counter += 1
+            if self.counter >= self.patience:
+                self.early_stop = True
+        else:
+            self.best_score = val_loss
+            self.counter = 0
 
 class ChangepointNormsDataset(Dataset):
     def __init__(self, split, utterances_before, utterances_after):
@@ -62,6 +82,8 @@ class ChangepointNormsClassifier(nn.Module):
         self.model = AutoModel.from_pretrained(encoder,config)
         # TODO: make the complexity of the classifier configurable (eg, more layers, etc)
         self.classifier = nn.Linear(self.model.config.hidden_size, 1)
+        self.early_stopping = EarlyStopping(patience=3, delta=0.01)
+
 
     def forward(self, inputs):
         outputs = self.model(**inputs)
@@ -427,6 +449,9 @@ if __name__ == '__main__':
                 v_data_types.extend(v_batch['data_type'])
                 v_timestamps.extend(v_batch['timestamp'])
                 v_llrs.extend(calculate_llrs(v_logits.squeeze()).detach().cpu().numpy().tolist())
+
+            
+            
         valid_ldc_predictions = [
             {
                 'file_id': file_id,
@@ -511,6 +536,11 @@ if __name__ == '__main__':
         epochs_tab.append(epoch)
         train_loss_tab.append(t_tot_loss/len(t_labels))
         val_loss_tab.append(v_tot_loss/len(v_labels))
+
+        model.early_stopping(val_accuracy)
+        if model.early_stopping.early_stop:
+            print('Early stopping')
+            break
 
       
 
