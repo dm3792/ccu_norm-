@@ -272,7 +272,7 @@ def get_ldc_changepoints(split):
 
     changepoints = []
     #change later
-    for file_info in load_ldc_data(include_preprocessed_audio_and_video=True, use_cache=True).values():
+    for file_info in load_ldc_data(include_preprocessed_audio_and_video=False, use_cache=True).values():
         if split not in file_info['splits'] :
             continue
 
