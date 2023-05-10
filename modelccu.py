@@ -75,13 +75,18 @@ class ChangepointNormsDataset(Dataset):
 
 
 class ChangepointNormsClassifier(nn.Module):
-    def __init__(self, encoder,downsample):
+    def __init__(self, encoder,downsample,num_layers):
         super().__init__()
         config = AutoConfig.from_pretrained(encoder)
         config.update({'conv_stride': downsample})
         self.model = AutoModel.from_pretrained(encoder,config)
         # TODO: make the complexity of the classifier configurable (eg, more layers, etc)
-        self.classifier = nn.Linear(self.model.config.hidden_size, 1)
+        # self.classifier = nn.Linear(self.model.config.hidden_size, 1)
+        self.classifier = nn.Sequential(
+            *list(self.classifier.children())[:-1],
+            *[nn.Linear(self.config.hidden_size, self.config.hidden_size) for _ in range(num_layers)],
+            nn.Linear(self.config.hidden_size, 1)
+        )
         self.early_stopping = EarlyStopping(patience=3, delta=0.01)
 
 
@@ -327,6 +332,7 @@ if __name__ == '__main__':
     parser.add_argument('--checkpoint', action='store_true')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--weight_decay', type=float, default=1e-5)
+    parser.add_argument('--classifierlayers', type=int, default=1)
     args = parser.parse_args()
 
     l1_lambda = 0.01
@@ -342,7 +348,7 @@ if __name__ == '__main__':
         assert torch.cuda.is_available()
     device = torch.device(args.device)
 
-    model = ChangepointNormsClassifier(args.encoder,args.downsample).to(device)
+    model = ChangepointNormsClassifier(args.encoder,args.downsample,args.classifierlayers).to(device)
     tokenizer = AutoTokenizer.from_pretrained(args.encoder)
     # # TODO: support configurable weight decay, higher LR for classification head
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
