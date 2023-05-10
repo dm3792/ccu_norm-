@@ -271,6 +271,7 @@ def get_ldc_changepoints(split):
     assert split in {'INTERNAL_TRAIN', 'INTERNAL_VAL', 'INTERNAL_TEST'}
 
     changepoints = []
+    #change later
     for file_info in load_ldc_data(include_preprocessed_audio_and_video=False, use_cache=True).values():
         if split not in file_info['splits'] :
             continue
@@ -278,8 +279,6 @@ def get_ldc_changepoints(split):
         for changepoint in file_info['changepoints']:
             changepoint['file_id'] = file_info['file_id']
             changepoint['type'] = file_info['data_type']
-            changepoint['timestamp']=str(int(changepoint['timestamp']))
-            changepoint['impact_scalar']=str(changepoint['impact_scalar'])
             changepoints.append(changepoint)
 
     return changepoints
@@ -428,7 +427,7 @@ if __name__ == '__main__':
             {
                 'file_id': file_id,
                 'type': data_type,
-                'timestamp': str(int(timestamp.item())),
+                'timestamp': timestamp.item(),
                 'llr': llr
             } for file_id, data_type, timestamp, llr in zip(
                 v_file_ids, v_data_types, v_timestamps, v_llrs

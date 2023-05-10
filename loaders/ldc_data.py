@@ -119,11 +119,10 @@ def find_transcript_file(file_info, file_id, asr_type):
     return transcript_files
 
 
-def utterances_from_transcript(transcript, transcript_file, utterances, include, file_info, file_name, format):
-    assert format in {'columbia', 'nyu', 'parc'}
+def utterances_from_transcript(transcript, transcript_file, utterances, include, file_info, file_name):
 
     # Segment processing
-    if format == 'columbia' and file_name != 'M010050LM-a':
+    if 'segments' in transcript and file_name != 'M010050LM-a':
         for segment in transcript['segments']:
             utterances.append({
                 'start': segment['start'],
@@ -134,29 +133,6 @@ def utterances_from_transcript(transcript, transcript_file, utterances, include,
                 'audio_files': [],
                 'video_frames': []
             })
-    elif format == 'nyu':
-        if transcript:
-            if 'asr_turn_lvl' in transcript and transcript['asr_turn_lvl']:
-                for segment in transcript['asr_turn_lvl']:
-                    utterances.append({
-                        'start': segment['start_time'],
-                        'end': segment['end_time'],
-                        'text': segment['transcript'],
-                        'audio_files': [],
-                        'video_frames': []
-                    })
-            elif 'asr_utterance_lvl' in transcript and transcript['asr_utterance_lvl']:
-                for segment in transcript['asr_utterance_lvl']:
-                    utterances.append({
-                        'start': segment['start_time'],
-                        'end': segment['end_time'],
-                        'text': segment['transcript'],
-                        'audio_files': [],
-                        'video_frames': []
-                    })
-        else:
-            return
-
     else:
         if transcript:
             if 'asr_turn_lvl' in transcript and transcript['asr_turn_lvl']:
@@ -265,7 +241,7 @@ def add_processed_frames(file_ext, update_key, processed_files, utterances):
 #       }
 
 def load_ldc_data(include_preprocessed_audio_and_video=False, use_cache=False):
-    cache_filepath = os.path.join(BASE_DIR, 'amith-cache.pkl' )
+    cache_filepath = os.path.join(BASE_DIR, '%s-cache.pkl' % getpass.getuser())
 
     if use_cache and os.path.exists(cache_filepath):
         with open(cache_filepath, 'rb') as cache_file:
@@ -461,17 +437,17 @@ def load_ldc_data(include_preprocessed_audio_and_video=False, use_cache=False):
 
                     utterances_from_transcript(
                         whisper_transcript, whisper_transcript_f, utterances,
-                        include_preprocessed_audio_and_video, file_info, file_name, 'columbia'
+                        include_preprocessed_audio_and_video, file_info, file_name
                     )
 
                     utterances_from_transcript(
                         wav2vec_transcript, whisper_transcript_f, utterances_wav2vec,
-                        include_preprocessed_audio_and_video, file_info, file_name, 'nyu'
+                        include_preprocessed_audio_and_video, file_info, file_name
                     )
 
                     utterances_from_transcript(
                         azure_transcript, whisper_transcript_f, utterances_azure,
-                        include_preprocessed_audio_and_video, file_info, file_name, 'parc'
+                        include_preprocessed_audio_and_video, file_info, file_name
                     )
 
                     file_info['utterances'] = {
@@ -488,7 +464,7 @@ def load_ldc_data(include_preprocessed_audio_and_video=False, use_cache=False):
 
                     utterances_from_transcript(
                         transcript, transcript_file, utterances,
-                        include_preprocessed_audio_and_video, file_info, file_name, 'columbia'
+                        include_preprocessed_audio_and_video, file_info, file_name
                     )
 
                     file_info['utterances'] = {
