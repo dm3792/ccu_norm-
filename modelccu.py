@@ -552,7 +552,7 @@ if __name__ == '__main__':
         train_loss_tab.append(t_tot_loss/len(t_labels))
         val_loss_tab.append(v_tot_loss/len(v_labels))
 
-        model.early_stopping(val_accuracy)
+        model.early_stopping(average_val_precision)
         if model.early_stopping.early_stop:
             print('Early stopping')
             break
@@ -580,6 +580,7 @@ if __name__ == '__main__':
             te_preds[te_file].append(torch.sigmoid(te_logits))
             te_labels[te_file].append(te_label)
 
+
     print('test loss: '+ str(te_tot_loss/len(te_labels)))
 
     
@@ -587,11 +588,15 @@ if __name__ == '__main__':
 
     fields = ['Epoch', 'Train loss', 'Val loss','Average val precision','val precision','val recall','val accuracy','val f1'] 
 
-    with open('model_metrics'+str(args.regularisation)+str(args.learning_rate)+'.csv', 'w', newline='') as file: 
+    with open('model_metrics'+str(args.regularisation)+str(args.learning_rate)+str(args.include_utterance)+
+              str(args.downsample)+str(args.lrscheduler)+str(args.classifierlayers)+str(args.confident_only)+'.csv', 'w', newline='') as file: 
         writer = csv.DictWriter(file, fieldnames = fields)
         writer.writeheader() 
         writer.writerows(metrics_dict)
-
+    with open('model_metrics'+str(args.regularisation)+str(args.learning_rate)+str(args.include_utterance)+
+              str(args.downsample)+str(args.lrscheduler)+str(args.classifierlayers)+str(args.confident_only)+'.csv', 'w', newline='') as file: 
+        file.write('test_loss: '+ str(te_tot_loss/len(te_labels)))
+    
     #fields = ['train loss', 'val loss'] 
 
     # with open('epoch_losses.csv', 'w', newline='') as file: 
