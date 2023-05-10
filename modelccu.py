@@ -278,7 +278,7 @@ def get_ldc_changepoints(split):
         for changepoint in file_info['changepoints']:
             changepoint['file_id'] = file_info['file_id']
             changepoint['type'] = file_info['data_type']
-            changepoint['timestamp']=str(changepoint['timestamp'])
+            changepoint['timestamp']=str(int(changepoint['timestamp']))
             changepoint['impact_scalar']=str(changepoint['impact_scalar'])
             changepoints.append(changepoint)
 
@@ -428,7 +428,7 @@ if __name__ == '__main__':
             {
                 'file_id': file_id,
                 'type': data_type,
-                'timestamp': str(timestamp.item()),
+                'timestamp': str(int(timestamp.item())),
                 'llr': llr
             } for file_id, data_type, timestamp, llr in zip(
                 v_file_ids, v_data_types, v_timestamps, v_llrs
