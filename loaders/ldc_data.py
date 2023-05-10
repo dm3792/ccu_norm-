@@ -240,8 +240,9 @@ def add_processed_frames(file_ext, update_key, processed_files, utterances):
 #                   }]
 #       }
 
+# TODO: CHANGE
 def load_ldc_data(include_preprocessed_audio_and_video=False, use_cache=False):
-    cache_filepath = os.path.join(BASE_DIR, '%s-cache.pkl' % getpass.getuser())
+    cache_filepath = os.path.join(BASE_DIR, 'amith-cache.pkl' )
 
     if use_cache and os.path.exists(cache_filepath):
         with open(cache_filepath, 'rb') as cache_file:
