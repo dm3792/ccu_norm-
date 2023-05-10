@@ -44,12 +44,12 @@ def generate_input(split,utt_before,utt_after,cf):
     118 :'respect',
     119 :'flattery'
     }
-    done=0
+    #done=0
     for item in content:
         
         
-        if(split in content[item]['splits']) or done==1 :
-        # if(split in content[item]['splits']):
+     #   if(split in content[item]['splits']) or done==1 :
+        if(split not in content[item]['splits']):
 
             continue
 
