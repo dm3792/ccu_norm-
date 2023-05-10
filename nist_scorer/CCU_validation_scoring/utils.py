@@ -26,11 +26,11 @@ def tad_add_noscore_region(ref,hyp):
 	""" 
 	Convert noann class into NO_SCORE_REGION in ref and remove noann class in hyp
 	"""    
+	
+	gtnan = ref[ref.Class.astype(str) == silence_string]
 	gtnanl = len(gtnan)
 	print(gtnanl);
 	print('----')
-	gtnan = ref[ref.Class.astype(str) == silence_string]
-	
 	if gtnanl > 0:
 		# logger.warning("Reference contains {} no-score regions.".format(gtnanl))
 		ref.loc[ref.Class.astype(str) == silence_string, "Class"]= "NO_SCORE_REGION"
