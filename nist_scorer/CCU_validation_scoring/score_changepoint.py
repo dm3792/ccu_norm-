@@ -124,7 +124,7 @@ def compute_average_precision_cps(ref, hyp, delta_cp_thresholds):
     """
     # REF has same amount of !score_regions for all runs, which need to be
     # excluded from overall REF count.
-    npos = len(ref.loc[ref.Class != 'NO_SCORE_REGION'])    
+    npos = len(ref.loc[ref.Class.astype(str) != 'NO_SCORE_REGION'])    
     output, out = {}, []
     alignment_df = pd.DataFrame()
 
@@ -141,7 +141,7 @@ def compute_average_precision_cps(ref, hyp, delta_cp_thresholds):
     ihyp = pd.concat(out)
     
     # Exclude NO_SCORE_REGIONs but keep FP NA's
-    ihyp = ihyp.loc[(ihyp.Class_ref != 'NO_SCORE_REGION') | ihyp.Class_ref.isna()]
+    ihyp = ihyp.loc[(ihyp.Class_ref.astype(str) != 'NO_SCORE_REGION') | ihyp.Class_ref.isna()]
 
     if ihyp.empty:
         for iout in delta_cp_thresholds:
