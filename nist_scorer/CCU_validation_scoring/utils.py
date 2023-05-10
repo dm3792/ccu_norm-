@@ -35,7 +35,7 @@ def tad_add_noscore_region(ref,hyp):
 		# logger.warning("Reference contains {} no-score regions.".format(gtnanl))
 		ref.loc[ref.Class.astype(str) == silence_string, "Class"]= "NO_SCORE_REGION"
 
-	prednan = hyp[hyp.Class == silence_string]
+	prednan = hyp[hyp.Class.astype(str) == silence_string]
 	prednanl = len(prednan)
 	if prednanl > 0:
 		logger = logging.getLogger('SCORING')
