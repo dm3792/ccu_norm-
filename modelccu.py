@@ -57,12 +57,12 @@ class EarlyStopping:
             self.counter = 0
 
 class ChangepointNormsDataset(Dataset):
-    def __init__(self, split, utterances_before, utterances_after):
+    def __init__(self, split, utterances_before, utterances_after,confident_only):
         self.split = split
         self.utterances_before = utterances_before
         self.utterances_after = utterances_after
 
-        self.examples = generate_input(self.split,self.utterances_before,self.utterances_after)
+        self.examples = generate_input(self.split,self.utterances_before,self.utterances_after,confident_only)
         
 
 
@@ -339,6 +339,8 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--weight_decay', type=float, default=1e-5)
     parser.add_argument('--classifierlayers', type=int, default=0)
+    parser.add_argument('--confident-only', action='store_true')
+
     args = parser.parse_args()
 
     l1_lambda = 0.01
@@ -361,9 +363,9 @@ if __name__ == '__main__':
     if(args.lrscheduler):
         scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
 
-    train, valid, test = ChangepointNormsDataset('INTERNAL_TRAIN', args.utterances_before, args.utterances_after), \
-                   ChangepointNormsDataset('INTERNAL_VAL', args.utterances_before, args.utterances_after),\
-                      ChangepointNormsDataset('INTERNAL_TEST', args.utterances_before, args.utterances_after)
+    train, valid, test = ChangepointNormsDataset('INTERNAL_TRAIN', args.utterances_before, args.utterances_after,args.confident_only), \
+                   ChangepointNormsDataset('INTERNAL_VAL', args.utterances_before, args.utterances_after,args.confident_only),\
+                      ChangepointNormsDataset('INTERNAL_TEST', args.utterances_before, args.utterances_after,args.confident_only)
    
     
     train_loader, valid_loader, test_loader = DataLoader(train, batch_size=args.batch_size, shuffle=True), \
