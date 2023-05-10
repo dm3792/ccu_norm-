@@ -21,6 +21,8 @@ import random
 from functools import partial
 from multiprocessing import Pool
 from scoring.average_precision import calculate_average_precision
+import json
+
 
 # TODO:
 # - support several different training modes:
@@ -279,6 +281,8 @@ def get_ldc_changepoints(split):
         for changepoint in file_info['changepoints']:
             changepoint['file_id'] = file_info['file_id']
             changepoint['type'] = file_info['data_type']
+            changepoint.pop('comment')
+            changepoint.pop('annotator')
             changepoints.append(changepoint)
 
     return changepoints
@@ -444,13 +448,11 @@ if __name__ == '__main__':
         print("-------------")
         print(valid_ldc_predictions[0])
 
-        with open("output1.txt", "w") as txt_file:
-            for line in valid_ldc_changepoints:
-                txt_file.write(" ".join(line) + "\n") 
+        with open('output1.json', 'w') as my_file:
+            json.dump(valid_ldc_changepoints, my_file) 
 
-        with open("output2.txt", "w") as txt_file:
-            for line in valid_ldc_predictions:
-                txt_file.write(" ".join(line) + "\n") 
+        with open("output2.json", "w") as txt_file:
+            json.dump(valid_ldc_predictions, my_file)
 
 
         average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
