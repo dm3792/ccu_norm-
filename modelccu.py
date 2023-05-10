@@ -554,10 +554,10 @@ if __name__ == '__main__':
         train_loss_tab.append(t_tot_loss/len(t_labels))
         val_loss_tab.append(v_tot_loss/len(v_labels))
 
-        model.early_stopping(average_val_precision)
-        if model.early_stopping.early_stop:
-            print('Early stopping')
-            break
+        # model.early_stopping(average_val_precision)
+        # if model.early_stopping.early_stop:
+        #     print('Early stopping')
+        #     break
 
       
 
