@@ -278,6 +278,7 @@ def get_ldc_changepoints(split):
         for changepoint in file_info['changepoints']:
             changepoint['file_id'] = file_info['file_id']
             changepoint['type'] = file_info['data_type']
+            changepoint['timestamp']=str(changepoint['timestamp'])
             changepoints.append(changepoint)
 
     return changepoints
