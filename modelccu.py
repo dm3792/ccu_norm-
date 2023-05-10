@@ -487,17 +487,17 @@ if __name__ == '__main__':
         print("-------------")
         print(valid_ldc_predictions[0])
 
-        with open('your_file1.txt', 'w') as f:
-            for line in valid_ldc_changepoints:
-                f.write(f"{line}\n")
-        with open('your_file2.txt', 'w') as f:
-            for line in valid_ldc_changepoints:
-                f.write(f"{line}\n")
+        # with open('your_file1.txt', 'w') as f:
+        #     for line in valid_ldc_changepoints:
+        #         f.write(f"{line}\n")
+        # with open('your_file2.txt', 'w') as f:
+        #     for line in valid_ldc_changepoints:
+        #         f.write(f"{line}\n")
 
 
-        #average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
+        average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
         
-        average_val_precision = 0
+        #average_val_precision = 0
         print('average val precision: '+ str(average_val_precision))
         val_precision=0
         val_recall=0
