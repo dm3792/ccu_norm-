@@ -426,7 +426,7 @@ if __name__ == '__main__':
             {
                 'file_id': file_id,
                 'type': data_type,
-                'timestamp': timestamp,
+                'timestamp': timestamp.item(),
                 'llr': llr
             } for file_id, data_type, timestamp, llr in zip(
                 v_file_ids, v_data_types, v_timestamps, v_llrs
