@@ -222,8 +222,8 @@ def compute_multiclass_cp_pr(ref, hyp, delta_cp_text_thresholds = 100, delta_cp_
     scores = defaultdict(list)
 
     ### Capture the noscores for later use
-    ref_noscore = ref.loc[ref.impact_scalar == 'NO_SCORE_REGION']
-    ref = ref.loc[ref.impact_scalar != 'NO_SCORE_REGION']
+    ref_noscore = ref.loc[ref.impact_scalar.astype(str) == 'NO_SCORE_REGION']
+    ref = ref.loc[ref.impact_scalar.astype(str) != 'NO_SCORE_REGION']
     #print("orig")
     #print("ref_noscore")
     #print(ref_noscore)
@@ -243,7 +243,7 @@ def compute_multiclass_cp_pr(ref, hyp, delta_cp_text_thresholds = 100, delta_cp_
     #print(hyp)
 
     # # Iterate over all Classes treating them as a binary detection
-    alist = ref.loc[ref.Class != 'NO_SCORE_REGION'].type.unique()
+    alist = ref.loc[ref.Class.astype(str) != 'NO_SCORE_REGION'].type.unique()
 
     delta_cp_thresholds = {"text": delta_cp_text_thresholds, "video": delta_cp_time_thresholds, "audio": delta_cp_time_thresholds}    
     apScores = []
@@ -251,7 +251,7 @@ def compute_multiclass_cp_pr(ref, hyp, delta_cp_text_thresholds = 100, delta_cp_
     for act in alist:
         
         apScore, alignment = compute_average_precision_cps(
-                ref=ref.loc[(ref.type == act) | (ref.Class == 'NO_SCORE_REGION')].reset_index(drop=True),                        
+                ref=ref.loc[(ref.type == act) | (ref.Class.astype(str) == 'NO_SCORE_REGION')].reset_index(drop=True),                        
                 hyp=hyp.loc[(hyp.type == act)].reset_index(drop=True),
                 delta_cp_thresholds=delta_cp_thresholds[act])
 
