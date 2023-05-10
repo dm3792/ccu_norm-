@@ -82,11 +82,17 @@ class ChangepointNormsClassifier(nn.Module):
         self.model = AutoModel.from_pretrained(encoder,config)
         # TODO: make the complexity of the classifier configurable (eg, more layers, etc)
         # self.classifier = nn.Linear(self.model.config.hidden_size, 1)
-        self.classifier = nn.Sequential(
-            *list(self.classifier.children())[:-1],
-            *[nn.Linear(self.config.hidden_size, self.config.hidden_size) for _ in range(num_layers)],
-            nn.Linear(self.config.hidden_size, 1)
-        )
+        if num_layers == 0:
+            self.classifier = nn.Linear(self.model.config.hidden_size, 1)
+        else:
+            layers = []
+            input_size = self.model.config.hidden_size
+            for _ in range(num_layers):
+                layers.append(nn.Linear(input_size, 256))
+                layers.append(nn.ReLU())
+                input_size = 256
+            layers.append(nn.Linear(input_size, 1))
+            self.classifier = nn.Sequential(*layers)
         self.early_stopping = EarlyStopping(patience=3, delta=0.01)
 
 
@@ -332,7 +338,7 @@ if __name__ == '__main__':
     parser.add_argument('--checkpoint', action='store_true')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--weight_decay', type=float, default=1e-5)
-    parser.add_argument('--classifierlayers', type=int, default=1)
+    parser.add_argument('--classifierlayers', type=int, default=0)
     args = parser.parse_args()
 
     l1_lambda = 0.01

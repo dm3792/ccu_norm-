@@ -5,9 +5,7 @@ train = generate_input('INTERNAL_TRAIN',1,1)
 val =generate_input('INTERNAL_VAL',1,1)
 test = generate_input('INTERNAL_TEST',1,1)
 
-with open('train_1.pickle', 'wb') as f:
-    # Write the list of objects to the file
-    pickle.dump(train, f)
+
 
 with open('val_1.pickle', 'wb') as f:
     # Write the list of objects to the file
