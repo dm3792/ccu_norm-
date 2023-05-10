@@ -493,7 +493,7 @@ if __name__ == '__main__':
                 f.write(f"{line}\n")
         with open('your_file2'+str(args.regularisation)+str(args.learning_rate)+str(args.include_utterance)+
               str(args.downsample)+str(args.lrscheduler)+str(args.classifierlayers)+str(args.confident_only)+'.txt', 'w') as f:
-            for line in valid_ldc_changepoints:
+            for line in valid_ldc_predictions:
                 f.write(f"{line}\n")
 
 
