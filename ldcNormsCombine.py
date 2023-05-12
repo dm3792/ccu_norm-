@@ -6,18 +6,18 @@ import pickle
 def generate_input(split,utt_before,utt_after,cf):
    
 
-    if split=="INTERNAL_TRAIN":
-        with open('train_2.pickle', 'rb') as pickle_file:
-            content = pickle.load(pickle_file)
-            return content
-    elif split=="INTERNAL_VAL":
-        with open('val_2.pickle', 'rb') as pickle_file:
-            content = pickle.load(pickle_file)
-            return content
-    else:
-        with open('test_2.pickle', 'rb') as pickle_file:
-            content = pickle.load(pickle_file)
-            return content
+    # if split=="INTERNAL_TRAIN":
+    #     with open('train_2.pickle', 'rb') as pickle_file:
+    #         content = pickle.load(pickle_file)
+    #         return content
+    # elif split=="INTERNAL_VAL":
+    #     with open('val_2.pickle', 'rb') as pickle_file:
+    #         content = pickle.load(pickle_file)
+    #         return content
+    # else:
+    #     with open('test_2.pickle', 'rb') as pickle_file:
+    #         content = pickle.load(pickle_file)
+    #         return content
 
 
     print(split)
@@ -44,12 +44,12 @@ def generate_input(split,utt_before,utt_after,cf):
     118 :'respect',
     119 :'flattery'
     }
-    #done=0
+    done=0
     for item in content:
         
         
-     #   if(split in content[item]['splits']) or done==1 :
-        if(split not in content[item]['splits']):
+        if(split in content[item]['splits']) or done==1 :
+     #   if(split not in content[item]['splits']):
 
             continue
 
