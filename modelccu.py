@@ -487,11 +487,11 @@ if __name__ == '__main__':
         print("-------------")
         print(valid_ldc_predictions[0])
 
-        with open('your_file1'+str(args.regularisation)+str(args.learning_rate)+str(args.include_utterance)+
+        with open('yourpfile1'+str(args.regularisation)+str(args.learning_rate)+str(args.include_utterance)+
               str(args.downsample)+str(args.lrscheduler)+str(args.classifierlayers)+str(args.confident_only)+'.txt', 'w') as f:
             for line in valid_ldc_changepoints:
                 f.write(f"{line}\n")
-        with open('your_file2'+str(args.regularisation)+str(args.learning_rate)+str(args.include_utterance)+
+        with open('yourpfile2'+str(args.regularisation)+str(args.learning_rate)+str(args.include_utterance)+
               str(args.downsample)+str(args.lrscheduler)+str(args.classifierlayers)+str(args.confident_only)+'.txt', 'w') as f:
             for line in valid_ldc_predictions:
                 f.write(f"{line}\n")
