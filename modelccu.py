@@ -595,6 +595,7 @@ if __name__ == '__main__':
         writer = csv.DictWriter(file, fieldnames = fields)
         writer.writeheader() 
         writer.writerows(metrics_dict)
+    print('adding test loss')
     with open('model_metrics'+str(args.regularisation)+str(args.learning_rate)+str(args.include_utterance)+
               str(args.downsample)+str(args.lrscheduler)+str(args.classifierlayers)+str(args.confident_only)+'.csv', 'w', newline='') as file: 
         file.write('test_loss: '+ str(te_tot_loss/len(te_labels)))
