@@ -150,13 +150,13 @@ def generate_input(split,utt_before,utt_after,cf):
 
     if split=="INTERNAL_TRAIN":
         with open('train_2.pickle', 'wb') as pickle_file:
-            content = pickle.dump(pickle_file)
+            content = pickle.dump(result,pickle_file)
     elif split=="INTERNAL_VAL":
         with open('val_2.pickle', 'wb') as pickle_file:
-            content = pickle.dump(pickle_file)
+            content = pickle.dump(result,pickle_file)
     else:
         with open('test_2.pickle', 'wb') as pickle_file:
-            content = pickle.dump(pickle_file)
+            content = pickle.dump(result,pickle_file)
     print(len(result))
     return result               
         
