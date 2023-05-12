@@ -298,6 +298,7 @@ def filter_system_preds(system_preds, text_char_threshold, time_sec_threshold, f
 
 
 def calculate_llrs(logits):
+    print(logits) 
     assert len(logits.shape) == 1
     probs = torch.sigmoid(logits)
     return torch.log(probs / (1 - probs))
