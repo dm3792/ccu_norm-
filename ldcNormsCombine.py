@@ -46,21 +46,16 @@ def generate_input(split,utt_before,utt_after,cf):
     }
     done=0
     for item in content:
-        
-        
+               
         if(split in content[item]['splits']) or done==1 :
-     #   if(split not in content[item]['splits']):
-
+    #   if(split not in content[item]['splits']):
             continue
-
         try:
             norms = pd.read_csv('yi/'+item+'.tab', sep='\t', lineterminator='\n')
             done=1
-            print('success')
+            print('success') 
         except:
             continue
-        
-        
 
         start = content[item]['start']
         end = content[item]['end']

@@ -497,7 +497,7 @@ if __name__ == '__main__':
                 f.write(f"{line}\n")
 
 
-        #average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
+        average_val_precision = calculate_average_precision(valid_ldc_changepoints,valid_ldc_predictions)
         
         
         average_val_precision = 0
