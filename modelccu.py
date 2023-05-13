@@ -96,10 +96,10 @@ class ChangepointNormsClassifier(nn.Module):
         self.early_stopping = EarlyStopping(patience=3, delta=0.01)
 
 
-    def forward(self, input_ids, attention_mask):
-        #outputs = self.model(**inputs)
-        outputs = self.encoder(input_ids=input_ids, attention_mask=attention_mask)
-        # last_hidden_state = outputs.last_hidden_state
+    def forward(self, inputs):
+        outputs = self.model(input_ids=inputs['input_ids'],attention_mask=inputs['attention_mask'])
+        
+#        # last_hidden_state = outputs.last_hidden_state
         # pooled_output = last_hidden_state[:, 0]
         pooled_output = outputs[1]
         pooled_output = self.dropout(pooled_output)
@@ -389,9 +389,8 @@ if __name__ == '__main__':
             t_tokenized = tokenize(
                 t_batch, tokenizer, args
             ).to(device)
-            input_ids = t_tokenized['input_ids']
-            attention_mask = t_tokenized['attention_mask']
-            t_logits = model(input_ids,attention_mask)
+            
+            t_logits = model(t_tokenized)
             actual = t_batch['label']
             actual = actual.unsqueeze(1)
 
@@ -439,9 +438,8 @@ if __name__ == '__main__':
             v_tokenized = tokenize(
                 v_batch, tokenizer, args
             ).to(device)
-            input_ids = v_tokenized['input_ids']
-            attention_mask = v_tokenized['attention_mask']
-            t_logits = model(input_ids,attention_mask)
+            
+            t_logits = model(v_tokenized)
            
             crazy = v_batch['label']
             crazy = crazy.unsqueeze(1)
@@ -575,9 +573,7 @@ if __name__ == '__main__':
         te_tokenized = tokenize(
             te_batch, tokenizer, args
         ).to(device)
-        input_ids = te_tokenized['input_ids']
-        attention_mask = te_tokenized['attention_mask']
-        te_logits = model(input_ids,attention_mask)
+        te_logits = model(te_tokenized)
         crazy = te_batch['label']
         crazy = crazy.unsqueeze(1)
         te_loss = nn.BCEWithLogitsLoss()(
