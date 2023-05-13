@@ -439,7 +439,7 @@ if __name__ == '__main__':
             ).to(device)
             
             v_logits = model(v_tokenized)
-           
+            print(v_logits)
             crazy = v_batch['label']
             crazy = crazy.unsqueeze(1)
             v_loss = nn.BCEWithLogitsLoss()(
