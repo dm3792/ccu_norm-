@@ -107,7 +107,12 @@ class ChangepointNormsClassifier(nn.Module):
         # return logits
 
 def tokenize(batch, tokenizer, args):
-
+    print("heyyyy")
+    print(args.include_utterance)
+    print("utterance")
+    print(batch['utterance'])
+    print("norms") 
+    print(batch['norms'])
     if args.include_utterance:
         return tokenizer(
             batch['norms'],
