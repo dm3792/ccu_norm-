@@ -102,7 +102,6 @@ class ChangepointNormsClassifier(nn.Module):
         print(inputs['input_ids'])
         print(inputs['attention_mask'])
         outputs = self.model(input_ids=inputs['input_ids'],attention_mask=inputs['attention_mask'])
-        
 #        # last_hidden_state = outputs.last_hidden_state
         # pooled_output = last_hidden_state[:, 0]
         pooled_output = outputs[1]
