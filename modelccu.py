@@ -96,23 +96,22 @@ class ChangepointNormsClassifier(nn.Module):
         self.early_stopping = EarlyStopping(patience=3, delta=0.01)
 
 
-    def forward(self, inputs):
-        outputs = self.model(**inputs)
-        last_hidden_state = outputs.last_hidden_state
-        pooled_output = last_hidden_state[:, 0]
+    def forward(self, input_ids, attention_mask):
+        #outputs = self.model(**inputs)
+        outputs = self.encoder(input_ids=input_ids, attention_mask=attention_mask)
+        # last_hidden_state = outputs.last_hidden_state
+        # pooled_output = last_hidden_state[:, 0]
+        pooled_output = outputs[1]
+        pooled_output = self.dropout(pooled_output)
         logits = self.classifier(pooled_output)
         return logits
+
         # pass CLS token representation through classifier
         # logits = self.classifier(outputs.last_hidden_state[:, 0, :])
         # return logits
 
 def tokenize(batch, tokenizer, args):
-    print("heyyyy")
-    print(args.include_utterance)
-    print("utterance")
-    print(batch['utterance'])
-    print("norms") 
-    print(batch['norms'])
+   
     if args.include_utterance:
         return tokenizer(
             batch['norms'],
@@ -390,7 +389,9 @@ if __name__ == '__main__':
             t_tokenized = tokenize(
                 t_batch, tokenizer, args
             ).to(device)
-            t_logits = model(t_tokenized)
+            input_ids = t_tokenized['input_ids']
+            attention_mask = t_tokenized['attention_mask']
+            t_logits = model(input_ids,attention_mask)
             actual = t_batch['label']
             actual = actual.unsqueeze(1)
 
@@ -438,11 +439,10 @@ if __name__ == '__main__':
             v_tokenized = tokenize(
                 v_batch, tokenizer, args
             ).to(device)
-            print("input")
-            print(v_tokenized)
-            v_logits = model(v_tokenized)
-            print("output")
-            print(v_logits)
+            input_ids = v_tokenized['input_ids']
+            attention_mask = v_tokenized['attention_mask']
+            t_logits = model(input_ids,attention_mask)
+           
             crazy = v_batch['label']
             crazy = crazy.unsqueeze(1)
             v_loss = nn.BCEWithLogitsLoss()(
@@ -575,7 +575,9 @@ if __name__ == '__main__':
         te_tokenized = tokenize(
             te_batch, tokenizer, args
         ).to(device)
-        te_logits = model(te_tokenized)
+        input_ids = te_tokenized['input_ids']
+        attention_mask = te_tokenized['attention_mask']
+        te_logits = model(input_ids,attention_mask)
         crazy = te_batch['label']
         crazy = crazy.unsqueeze(1)
         te_loss = nn.BCEWithLogitsLoss()(
