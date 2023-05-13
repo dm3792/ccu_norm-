@@ -83,7 +83,7 @@ class ChangepointNormsClassifier(nn.Module):
         # TODO: make the complexity of the classifier configurable (eg, more layers, etc)
         # self.classifier = nn.Linear(self.model.config.hidden_size, 1)
         if num_layers == 0:
-            self.classifier = nn.Linear(self.model.config.hidden_size, 2)
+            self.classifier = nn.Linear(self.model.config.hidden_size, 1)
         else:
             layers = []
             input_size = self.model.config.hidden_size
@@ -102,6 +102,8 @@ class ChangepointNormsClassifier(nn.Module):
 #        # last_hidden_state = outputs.last_hidden_state
         # pooled_output = last_hidden_state[:, 0]
         pooled_output = outputs[1]
+        print("before classifier")
+        print(pooled_output)
         logits = self.classifier(pooled_output)
         return logits
 
