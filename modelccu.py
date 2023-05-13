@@ -438,7 +438,7 @@ if __name__ == '__main__':
                 v_batch, tokenizer, args
             ).to(device)
             
-            t_logits = model(v_tokenized)
+            v_logits = model(v_tokenized)
            
             crazy = v_batch['label']
             crazy = crazy.unsqueeze(1)
