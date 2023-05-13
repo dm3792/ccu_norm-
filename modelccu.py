@@ -102,7 +102,6 @@ class ChangepointNormsClassifier(nn.Module):
 #        # last_hidden_state = outputs.last_hidden_state
         # pooled_output = last_hidden_state[:, 0]
         pooled_output = outputs[1]
-        pooled_output = self.dropout(pooled_output)
         logits = self.classifier(pooled_output)
         return logits
 
