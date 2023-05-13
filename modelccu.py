@@ -433,7 +433,11 @@ if __name__ == '__main__':
             v_tokenized = tokenize(
                 v_batch, tokenizer, args
             ).to(device)
+            print("input")
+            print(v_tokenized)
             v_logits = model(v_tokenized)
+            print("output")
+            print(v_logits)
             crazy = v_batch['label']
             crazy = crazy.unsqueeze(1)
             v_loss = nn.BCEWithLogitsLoss()(
@@ -462,7 +466,7 @@ if __name__ == '__main__':
                 v_file_ids.extend(v_batch['file_id'])
                 v_data_types.extend(v_batch['data_type'])
                 v_timestamps.extend(v_batch['timestamp'])
-                v_llrs.extend(calculate_llrs(v_logits.squeeze().detach().cpu().numpy()).tolist())
+                v_llrs.extend(calculate_llrs(v_logits.squeeze()).detach().cpu().numpy().tolist())
 
             
             
