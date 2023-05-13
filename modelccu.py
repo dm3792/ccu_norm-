@@ -77,9 +77,11 @@ class ChangepointNormsDataset(Dataset):
 class ChangepointNormsClassifier(nn.Module):
     def __init__(self, encoder,downsample,num_layers):
         super().__init__()
-        config = AutoConfig.from_pretrained(encoder)
-        config.update({'conv_stride': downsample})
-        self.model = AutoModel.from_pretrained(encoder,config)
+        # config = AutoConfig.from_pretrained(encoder)
+        # config.update({'conv_stride': downsample})
+        #self.model = AutoModel.from_pretrained(encoder,config)
+        self.model = AutoModel.from_pretrained(encoder)
+
         # TODO: make the complexity of the classifier configurable (eg, more layers, etc)
         # self.classifier = nn.Linear(self.model.config.hidden_size, 1)
         if num_layers == 0:
@@ -97,6 +99,8 @@ class ChangepointNormsClassifier(nn.Module):
 
 
     def forward(self, inputs):
+        print(inputs['input_ids'])
+        print(inputs['attention_mask'])
         outputs = self.model(input_ids=inputs['input_ids'],attention_mask=inputs['attention_mask'])
         
 #        # last_hidden_state = outputs.last_hidden_state
