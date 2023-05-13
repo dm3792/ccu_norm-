@@ -44,7 +44,7 @@ def generate_input(split,utt_before,utt_after,cf):
     118 :'respect',
     119 :'flattery'
     }
-    done=5
+    done=0
     for item in content:
                
         if(split in content[item]['splits']) or done==1 :
@@ -52,7 +52,7 @@ def generate_input(split,utt_before,utt_after,cf):
             continue
         try:
             norms = pd.read_csv('yi/'+item+'.tab', sep='\t', lineterminator='\n')
-            done=5
+            done+=1
             print('success') 
         except:
             continue
