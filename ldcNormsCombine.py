@@ -47,7 +47,7 @@ def generate_input(split,utt_before,utt_after,cf):
     done=0
     for item in content:
                
-        if(split in content[item]['splits']) or done==5 :
+        if(split in content[item]['splits']) or done==15 :
     #   if(split not in content[item]['splits']):
             continue
         try:
