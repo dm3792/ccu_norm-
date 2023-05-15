@@ -424,7 +424,7 @@ if __name__ == '__main__':
                 
                 t_loss += l1_lambda * regularization_loss
 
-            if(args.regularisation=='l1'):
+            if(args.regularisation=='l2'):
                 regularization_loss = 0
                 for param in model.parameters():
                     regularization_loss += torch.norm(param, 2)
@@ -458,8 +458,6 @@ if __name__ == '__main__':
             ).to(device)
             
             v_logits = model(v_tokenized)
-            print("logits")
-            print(v_logits)
             crazy = v_batch['label']
             crazy = crazy.unsqueeze(1)
             v_loss = nn.BCEWithLogitsLoss()(

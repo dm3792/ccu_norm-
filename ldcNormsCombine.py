@@ -6,18 +6,18 @@ import pickle
 def generate_input(split,utt_before,utt_after,cf):
    
 
-    # if split=="INTERNAL_TRAIN":
-    #     with open('train_2.pickle', 'rb') as pickle_file:
-    #         content = pickle.load(pickle_file)
-    #         return content
-    # elif split=="INTERNAL_VAL":
-    #     with open('val_2.pickle', 'rb') as pickle_file:
-    #         content = pickle.load(pickle_file)
-    #         return content
-    # else:
-    #     with open('test_2.pickle', 'rb') as pickle_file:
-    #         content = pickle.load(pickle_file)
-    #         return content
+    if split=="INTERNAL_TRAIN":
+        with open('train_2.pickle', 'rb') as pickle_file:
+            content = pickle.load(pickle_file)
+            return content
+    elif split=="INTERNAL_VAL":
+        with open('val_2.pickle', 'rb') as pickle_file:
+            content = pickle.load(pickle_file)
+            return content
+    else:
+        with open('test_2.pickle', 'rb') as pickle_file:
+            content = pickle.load(pickle_file)
+            return content
 
 
     print(split)
@@ -44,15 +44,13 @@ def generate_input(split,utt_before,utt_after,cf):
     118 :'respect',
     119 :'flattery'
     }
-    done=0
     for item in content:
                
-        if(split not in content[item]['splits']) or done==7 :
-    #   if(split not in content[item]['splits']):
+    #    if(split not in content[item]['splits']) or done==7 :
+        if(split not in content[item]['splits']):
             continue
         try:
             norms = pd.read_csv('yi/'+item+'.tab', sep='\t', lineterminator='\n')
-            done+=1
             print('success') 
         except:
             continue
@@ -143,6 +141,15 @@ def generate_input(split,utt_before,utt_after,cf):
                     
                     result.append(example)
 
+    # if split=="INTERNAL_TRAIN":
+    #     with open('traindata.pickle', 'wb') as f:
+    #         pickle.dump(result, f)
+    # elif split=="INTERNAL_VAL":
+    #     with open('valdata.pickle', 'wb') as f:
+    #         pickle.dump(result, f)
+    # else:
+    #     with open('testdata.pickle', 'wb') as f:
+    #         pickle.dump(result, f)
   
     print(len(result))
     return result               
