@@ -67,8 +67,8 @@ class ChangepointNormsDataset(Dataset):
         self.examples = generate_input(self.split,self.utterances_before,self.utterances_after,confident_only)
         if(self.split=="INTERNAL_TRAIN"):
             label = [item['label'] for item in self.examples]
-            majority_class_indices = [i for i, label in enumerate(label) if label == 1]
-            minority_class_indices = [i for i, label in enumerate(label) if label == 0]
+            majority_class_indices = [i for i, label in enumerate(label) if label == 0]
+            minority_class_indices = [i for i, label in enumerate(label) if label == 1]
             undersampled_majority_indices = resample(majority_class_indices, replace=False, n_samples=len(minority_class_indices), random_state=42)
             undersampled_indices = undersampled_majority_indices + minority_class_indices
             undersampled_X = [self.examples[i] for i in undersampled_indices]
