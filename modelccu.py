@@ -63,7 +63,9 @@ class ChangepointNormsDataset(Dataset):
         self.utterances_after = utterances_after
 
         self.examples = generate_input(self.split,self.utterances_before,self.utterances_after,confident_only)
-        
+        print("hello I am data")
+        print(self.split)
+        print(self.examples)
 
 
     def __len__(self):
@@ -103,6 +105,7 @@ class ChangepointNormsClassifier(nn.Module):
         print(inputs['attention_mask'])
         outputs = self.model(input_ids=inputs['input_ids'],attention_mask=inputs['attention_mask'])
 #        # last_hidden_state = outputs.last_hidden_state
+        print(outputs)
         pooled_output = outputs.last_hidden_state[:, 0]
         #pooled_output = outputs[1]
         print("before classifier")
