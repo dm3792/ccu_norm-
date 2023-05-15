@@ -6,6 +6,8 @@ from torch import nn
 from torch.utils.data import Dataset, DataLoader
 from transformers import AutoModel, AutoTokenizer, AutoConfig
 from sklearn.model_selection import train_test_split
+from sklearn.utils import resample
+
 import copy
 import math
 from loaders.ldc_data import load_ldc_data
@@ -63,10 +65,14 @@ class ChangepointNormsDataset(Dataset):
         self.utterances_after = utterances_after
 
         self.examples = generate_input(self.split,self.utterances_before,self.utterances_after,confident_only)
-        print("hello I am data")
-        print(self.split)
-        print(self.examples)
-
+        if(self.split=="INTERNAL_TRAIN"):
+            label = [item['label'] for item in self.examples]
+            majority_class_indices = [i for i, label in enumerate(label) if label == 1]
+            minority_class_indices = [i for i, label in enumerate(label) if label == 0]
+            undersampled_majority_indices = resample(majority_class_indices, replace=False, n_samples=len(minority_class_indices), random_state=42)
+            undersampled_indices = undersampled_majority_indices + minority_class_indices
+            undersampled_X = [self.examples[i] for i in undersampled_indices]
+            self.examples = undersampled_X
 
     def __len__(self):
         return len(self.examples)
@@ -111,6 +117,7 @@ class ChangepointNormsClassifier(nn.Module):
         print("before classifier")
         print(pooled_output)
         logits = self.classifier(pooled_output)
+
         return logits
 
         # pass CLS token representation through classifier
