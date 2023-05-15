@@ -107,15 +107,11 @@ class ChangepointNormsClassifier(nn.Module):
 
 
     def forward(self, inputs):
+        print("input")
         print(inputs['input_ids'])
         print(inputs['attention_mask'])
         outputs = self.model(input_ids=inputs['input_ids'],attention_mask=inputs['attention_mask'])
-#        # last_hidden_state = outputs.last_hidden_state
-        print(outputs)
         pooled_output = outputs.last_hidden_state[:, 0]
-        #pooled_output = outputs[1]
-        print("before classifier")
-        print(pooled_output)
         logits = self.classifier(pooled_output)
 
         return logits
@@ -454,6 +450,7 @@ if __name__ == '__main__':
             ).to(device)
             
             v_logits = model(v_tokenized)
+            print("logits")
             print(v_logits)
             crazy = v_batch['label']
             crazy = crazy.unsqueeze(1)
@@ -504,9 +501,9 @@ if __name__ == '__main__':
         print('train loss: ' + str(t_tot_loss/len(t_labels)))
         print('validation loss: ' +  str(v_tot_loss/len(v_labels)))
 
-        print(valid_ldc_changepoints[0])
-        print("-------------")
-        print(valid_ldc_predictions[0])
+        # print(valid_ldc_changepoints[0])
+        # print("-------------")
+        # print(valid_ldc_predictions[0])
 
         with open('yourpfile1'+str(args.regularisation)+str(args.learning_rate)+str(args.include_utterance)+
               str(args.downsample)+str(args.lrscheduler)+str(args.classifierlayers)+str(args.confident_only)+'.txt', 'w') as f:
