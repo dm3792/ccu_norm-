@@ -73,11 +73,12 @@ class ChangepointNormsDataset(Dataset):
             undersampled_majority_indices = resample(majority_class_indices, replace=False, n_samples=len(minority_class_indices), random_state=42)
             undersampled_indices = undersampled_majority_indices + minority_class_indices
             undersampled_X = [self.examples[i] for i in undersampled_indices]
-            labelr = [item['label'] for item in self.examples]
             self.examples = undersampled_X
+            labelr = [item['label'] for item in self.examples]
+
             majority_class_indicesr = [i for i, labelr in enumerate(labelr) if labelr == 0]
             minority_class_indicesr = [i for i, labelr in enumerate(labelr) if labelr == 1]
-            print("length of maj")
+            print("length of max")
             print(len(majority_class_indicesr))
             print("length of min")
             print(len(minority_class_indicesr))
