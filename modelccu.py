@@ -118,13 +118,9 @@ class ChangepointNormsClassifier(nn.Module):
 
 
     def forward(self, inputs):
-        print("input")
-        print(inputs['input_ids'])
-        print(inputs['attention_mask'])
         outputs = self.model(input_ids=inputs['input_ids'],attention_mask=inputs['attention_mask'])
         pooled_output = outputs.last_hidden_state[:, 0]
         logits = self.classifier(pooled_output)
-
         return logits
 
         # pass CLS token representation through classifier
