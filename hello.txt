@@ -1,1 +1,0 @@
-dm3792@kingcrab:~/ccu_norm-$ CUDA_VISIBLE_DEVICES=0 python3 modelccu.py --device=cuda --batch-size=8 --epochs=1 --lr=0.001 --include-utterance --regularisation=l1 --downsample=4 
