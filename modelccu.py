@@ -564,6 +564,10 @@ if __name__ == '__main__':
         }
         )
 
+        with open("all_metrics_store"+str(args.regularisation)+str(args.learning_rate)+str(args.include_utterance)+
+              str(args.downsample)+str(args.lrscheduler)+str(args.classifierlayers)+str(args.confident_only)+".txt", "a") as myfile:
+            myfile.write(json.dumps(metrics_dict)+"\n")
+
         
 
         epochs_tab.append(epoch)
