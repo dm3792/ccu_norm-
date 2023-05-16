@@ -4,7 +4,7 @@ Modelccu.py contains the main model and calls the data loader, NSIT average prec
 How to run the code?<br />
 On the server choose a GPU using export CUDA_VISIBLE_DEVICES=x. <br />
 To help with the choosing process you can use the nvidia-smi command to check the available GPUs.<br />
-If the python version doesn’t support the scorer, set up and activate a conda environment with correct python version <br />
+If the python version doesn’t support the scorer, set up and activate a conda environment with correct python version 3.11 <br />
 Clone the repository <br />
 Run the command (or script) : python3 modelccu.py  <br />
 Various arguments that can be added in the command are as such: <br />
