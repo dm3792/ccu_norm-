@@ -66,7 +66,6 @@ class ChangepointNormsDataset(Dataset):
 
         self.examples = generate_input(self.split,self.utterances_before,self.utterances_after,confident_only)
         if(self.split=="INTERNAL_TRAIN"):
-            print("hereeeeee")
             label = [item['label'] for item in self.examples]
             majority_class_indices = [i for i, label in enumerate(label) if label == 0]
             minority_class_indices = [i for i, label in enumerate(label) if label == 1]
@@ -78,11 +77,7 @@ class ChangepointNormsDataset(Dataset):
 
             majority_class_indicesr = [i for i, labelr in enumerate(labelr) if labelr == 0]
             minority_class_indicesr = [i for i, labelr in enumerate(labelr) if labelr == 1]
-            print("length of max")
-            print(len(majority_class_indicesr))
-            print("length of min")
-            print(len(minority_class_indicesr))
-            
+           
 
 
     def __len__(self):
@@ -321,7 +316,6 @@ def filter_system_preds(system_preds, text_char_threshold, time_sec_threshold, f
 def calculate_llrs(logits):
     assert len(logits.shape) == 1
     probs = torch.sigmoid(logits)
-    print(probs)
     return torch.log(probs / (1 - probs))
 
 def get_ldc_changepoints(split):
