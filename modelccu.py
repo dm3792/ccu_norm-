@@ -349,7 +349,7 @@ if __name__ == '__main__':
     parser.add_argument('--learning-rate', '--lr', type=float, default=1e-5)
     parser.add_argument('--lrscheduler', action='store_true')
     parser.add_argument('--batch-size', type=int, default=32)
-    parser.add_argument('--epochs', type=int, default=10)
+    parser.add_argument('--epochs', type=int, default=8)
     parser.add_argument('--device', type=str, default='cpu')
     parser.add_argument('--checkpoint', action='store_true')
     parser.add_argument('--seed', type=int, default=42)
